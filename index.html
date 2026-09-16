@@ -16,6 +16,9 @@ input.field-error { border-color: #a00; background: #fee; }
 .year-warning { color: #a00; font-size: 0.85em; margin: 4px 0 0; }
 .culture-constrained-note { color: #555; font-size: 0.85em; font-style: italic; margin: 4px 0 0; }
 .source-fetch-hint { color: #666; font-size: 0.8em; font-style: italic; margin: 4px 0 0; }
+.faq-box { border: 1px solid #999; padding: 10px 14px; margin: 12px 0; }
+.faq-box summary { cursor: pointer; font-weight: bold; }
+.faq-box p { margin: 10px 0 0; }
 [hidden] { display: none !important; }
 .choice-row { display: block; }
 .choice-row > label.pill { display: block; margin-bottom: 8px; }
@@ -35,6 +38,22 @@ input.field-error { border-color: #a00; background: #fee; }
 </head>
 <body>
 <h1>Atlantia Name Submission</h1>
+
+<details class="faq-box">
+  <summary>FAQ</summary>
+  <p><strong>Who built this tool, or who maintains it?</strong><br>
+  <a href="https://forannanglorach.wordpress.com/" target="_blank" rel="noopener">Forannán Glórach</a> of Atlantia.</p>
+  <p><strong>Are you any kind of official resource?</strong><br>
+  No, I made this in my spare time because I would rather spend a hundred hours automating something than spend ten hours dealing with the minor inconvenience of doing it manually, due to my fundamental flaws as a person. I am not responsible for the Atlantian submission forms, Atlantian submission process, or any College of Heralds decisions.</p>
+  <p><strong>Is my personal information private and secure?</strong><br>
+  I don't get to see anything you enter in this form; it's doing everything locally on your browser. Nothing is sent to me. That doesn't mean it's necessarily private and secure; for example, someone could be looking over your shoulder or a hacker could've installed a keylogger on your machine.</p>
+  <p><strong>How did you make this website?</strong><br>
+  Full disclosure: Claude was involved fairly significantly. I have reviewed all code manually, and the text you see was written by a human – AI was involved on the back end in generating code. I do not, ever, use AI-generated art or AI-generated writing.</p>
+<p><strong>Does using this website actually submit my heraldry?</strong><br>
+No. Atlantia requires a warranted herald to make submissions. This website is to help walk you through the form (if you're a junior herald) or help you fill out the form under the supervision/guidance of a herald (if you're a submitter). If your herald sent you some documentation and asked you to fill out the form, make sure you put the documentation into the form just as they sent it to you. 
+</p>
+</details>
+
   <p class="intro">
 This webpage generates a correctly-filled-out copy of Atlantia's official individual name submission form PDF. It only formats what you enter into the form and helps you to navigate through the requirements - it does not check your name for conflict or registerability. Please give the filled-out PDF to a warranted herald, who will send it on to Ibis if it passes a conflict check. 
   </p>
@@ -44,10 +63,22 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
   <form id="nameForm">
     <fieldset id="submissionPathFieldset">
       <legend>Is this your first SCA name submission?</legend>
-<p>Note: If you gave an "SCA name" when you signed up to be a member of the SCA, that does not mean you registered a name. If you did not go through the process with a herald and give $10 to the College of Heralds, your name is unregistered. You can <a href="https://oanda.sca.org//oanda_np.cgi">search the database of all registered names</a> to double-check if your name is registered.</p>
       <div class="choice-row" id="firstSubmissionChoices">
-        <label class="pill"><input type="radio" name="firstSubmission" value="yes"> yes - I'm trying to register my first and only name</label>
-        <label class="pill"><input type="radio" name="firstSubmission" value="no"> no - I'm trying to do something else</label>
+        <label class="pill"><input type="radio" name="firstSubmission" value="yes"> Yes - I'm trying to register my first and only name</label>
+        <label class="pill"><input type="radio" name="firstSubmission" value="no"> No - I'm trying to do something else</label>
+        <label class="pill"><input type="radio" name="firstSubmission" value="notSure"> I'm not sure if my name is registered</label>
+      </div>
+      <div class="sub-choice" id="notSureWrap" hidden>
+        <div class="field">
+          <label for="notSureGivenName">First name(s) that you think might be registered</label>
+          <input type="text" id="notSureGivenName" placeholder="e.g. John, Mary, Ragnarr, Lisbet">
+        </div>
+        <div class="field">
+          <label for="notSureByname">Byname or surname(s) that you think might be registered</label>
+          <input type="text" id="notSureByname" placeholder="e.g. Smith, of London, the Weaver, Axebreaker">
+        </div>
+        <div class="field full" id="notSureSearchWrap"></div>
+        <p>Once you've checked, come back up and select "yes" or "no" above to continue.</p>
       </div>
       <div class="sub-choice" id="whatDoingWrap" hidden>
         <div class="field">
@@ -62,25 +93,9 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
       </div>
     </fieldset>
 
-<fieldset id="nameTypeFieldset" hidden>
-      <legend>Name Type</legend>
-      <div class="choice-row" id="nameTypeChoices">
-        <label class="pill"><input type="radio" name="nameType" value="Primary"> Primary - the main name I want to be referred to by.</label>
-        <label class="pill"><input type="radio" name="nameType" value="Alternate"> Alternate - an extra name I'd like to register, eg. for a second persona.</label>
-        <label class="pill"><input type="radio" name="nameType" value="Household"> Household - a name for a group of people, not for an individual.</label>
-        <label class="pill"><input type="radio" name="nameType" value="Other"> Other</label>
-      </div>
-      <div class="sub-choice" id="nameTypeOtherWrap" hidden>
-        <div class="field">
-          <label for="nameTypeOtherText">Specify other name type</label>
-          <input type="text" id="nameTypeOtherText" name="Other name type">
-        </div>
-      </div>
-    </fieldset>
 
     <fieldset id="actionTypeFieldset" hidden>
       <legend>Action Type</legend>
-<p>If you gave a Society name when you signed up for an SCA membership, this does NOT mean you registered an SCA name. You can give an unregistered name for your membership card. You have only registered your name if you registered it with the College of Heralds and paid for the submission. If you're not sure whether you registered a name, try <a href="https://oanda.sca.org//oanda_complex.cgi?w1=1&m1=name+pattern&p1=Write+your+first+name+here&w2=1&m2=name+pattern&p2=Write+your+second+name+here&w3=1&m3=armory+description&p3=&w4=1&m4=armory+description&p4=&w5=1&m5=armory+description&p5=&w6=1&m6=armory+description&p6=&w7=1&m7=armory+description&p7=&w8=1&m8=armory+description&p8=&w9=1&m9=armory+description&p9=&w10=1&m10=armory+description&p10=&l=500&s=name+only&d=modern&g=disabled&a=disabled&raw=disabled&rs=all+items">searching the Ordinary & Armorial</a>.
       <div class="choice-row" id="actionTypeChoices">
         <label class="pill"><input type="radio" name="actionType" value="New">New name (never submitted before)</label>
         <label class="pill"><input type="radio" name="actionType" value="Resubmission">Resubmission (my name was returned and I want to try again)</label>
@@ -171,6 +186,30 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
           <p class="year-warning" hidden></p>
         </div>
         <div class="field" id="changeLoarLinkWrap"></div>
+      </div>
+
+      <div class="sub-choice" id="holdingNameDetailsWrap" hidden>
+        <div class="field">
+          <label for="currentHoldingName">What holding name was registered?</label>
+          <input type="text" id="currentHoldingName" placeholder="e.g. Fabian of Ponte Alto">
+          <p class="oanda-hint"></p>
+        </div>
+      </div>
+    </fieldset>
+<fieldset id="nameTypeFieldset" hidden>
+      <legend>Name Type</legend>
+      <p id="nameTypeIntro" hidden></p>
+      <div class="choice-row" id="nameTypeChoices">
+        <label class="pill"><input type="radio" name="nameType" value="Primary"> <span class="nt-label">Primary - the main name I want to be referred to by.</span></label>
+        <label class="pill"><input type="radio" name="nameType" value="Alternate"> <span class="nt-label">Alternate - an extra name I'd like to register, eg. for a second persona.</span></label>
+        <label class="pill"><input type="radio" name="nameType" value="Household"> <span class="nt-label">Household - a name for a group of people, not for an individual.</span></label>
+        <label class="pill"><input type="radio" name="nameType" value="Other"> <span class="nt-label">Other</span></label>
+      </div>
+      <div class="sub-choice" id="nameTypeOtherWrap" hidden>
+        <div class="field">
+          <label for="nameTypeOtherText">Specify other name type</label>
+          <input type="text" id="nameTypeOtherText" name="Other name type">
+        </div>
       </div>
     </fieldset>
 
@@ -677,11 +716,91 @@ function setNameAndAction(nameType, actionType) {
   setRadioValue('actionType', actionType);
 }
 
+const NAME_TYPE_LABELS = {
+  default: {
+    intro: '',
+    Primary: 'Primary - the main name I want to be referred to by.',
+    Alternate: "Alternate - an extra name I'd like to register, eg. for a second persona.",
+    Household: 'Household - a name for a group of people, not for an individual.',
+    Other: 'Other'
+  },
+  Resubmission: {
+    intro: 'Resubmission requires that you are editing a name that was returned, so you should make sure you select the same type of name as on your first attempt. What sort of name was returned?',
+    Primary: 'Primary - the main name I want to be referred to by.',
+    Alternate: "Alternate - an extra name I'd like to register, eg. for a second persona.",
+    Household: 'Household - a name for a group of people, not for an individual.',
+    Other: 'Other'
+  },
+  Appeal: {
+    intro: "If you submitted a name that was returned, and you do not want to change the name, you can file an appeal if you can provide some reason why the name should be accepted instead of returned (eg. additional and new supporting evidence, a change in legal circumstances, or a change in the SCA College of Heralds' rules since you filed your first submission). If this does not describe you, go back and pick another option. If it does, what sort of name are you filing an appeal about?",
+    Primary: 'Primary - the main name I want to be referred to by.',
+    Alternate: "Alternate - an extra name I'd like to register, eg. for a second persona.",
+    Household: 'Household - a name for a group of people, not for an individual.',
+    Other: 'Other'
+  },
+  ChangeIfRegistered: {
+    intro: 'Which of your names would you like to change?',
+    Primary: 'My primary name',
+    Alternate: '(One of) my alternate name(s)',
+    Household: 'My household name',
+    Other: 'Other'
+  }
+};
+
+function applyNameTypeLabels(set) {
+  const introEl = document.getElementById('nameTypeIntro');
+  introEl.textContent = set.intro;
+  introEl.hidden = !set.intro;
+  document.querySelectorAll('#nameTypeChoices label.pill').forEach(label => {
+    const input = label.querySelector('input');
+    const span = label.querySelector('.nt-label');
+    if (set[input.value]) span.textContent = set[input.value];
+  });
+}
+
+// Only the "file an appeal, resubmission or change" streamlined path sequences Action
+// Type before Name Type and filters/relabels based on the choice; the raw "show me all
+// the options" path shows both immediately with the original generic labels, unfiltered.
+function updateNameTypeForAction() {
+  const streamlined = document.querySelector('input[name="streamlinedAction"]:checked')?.value;
+  if (streamlined !== 'fullQuestions') return;
+
+  const actionType = document.querySelector('input[name="actionType"]:checked')?.value;
+
+  if (actionType === 'ChangeOfHoldingName') {
+    nameTypeFieldset.hidden = true;
+    setRadioValue('nameType', 'Primary');
+    updateNameSubmittedVisibility();
+    updateDocumentationMode();
+    return;
+  }
+
+  if (!actionType) {
+    nameTypeFieldset.hidden = true;
+    return;
+  }
+
+  applyNameTypeLabels(NAME_TYPE_LABELS[actionType] || NAME_TYPE_LABELS.default);
+  nameTypeFieldset.hidden = false;
+}
+
+function restrictActionTypeOptions(restrict) {
+  ['New', 'Other'].forEach(val => {
+    const input = document.querySelector(`input[name="actionType"][value="${val}"]`);
+    const label = input.closest('label.pill');
+    label.hidden = restrict;
+    if (restrict && input.checked) {
+      input.checked = false;
+    }
+  });
+}
+
 function updateSubmissionPath() {
   const first = document.querySelector('input[name="firstSubmission"]:checked')?.value;
   const streamlined = document.querySelector('input[name="streamlinedAction"]:checked')?.value;
 
   whatDoingWrap.hidden = first !== 'no';
+  document.getElementById('notSureWrap').hidden = first !== 'notSure';
 
   if (first === 'yes') {
     setNameAndAction('Primary', 'New');
@@ -695,14 +814,22 @@ function updateSubmissionPath() {
     setNameAndAction('Household', 'New');
     nameTypeFieldset.hidden = true;
     actionTypeFieldset.hidden = true;
-  } else if (first === 'no' && (streamlined === 'fullQuestions' || streamlined === 'other')) {
+  } else if (first === 'no' && streamlined === 'fullQuestions') {
     streamlinedSubmission = null;
-    nameTypeFieldset.hidden = false;
     actionTypeFieldset.hidden = false;
+    restrictActionTypeOptions(true);
+    updateNameTypeForAction();
+  } else if (first === 'no' && streamlined === 'other') {
+    streamlinedSubmission = null;
+    actionTypeFieldset.hidden = false;
+    nameTypeFieldset.hidden = false;
+    restrictActionTypeOptions(false);
+    applyNameTypeLabels(NAME_TYPE_LABELS.default);
   } else {
     streamlinedSubmission = null;
     nameTypeFieldset.hidden = true;
     actionTypeFieldset.hidden = true;
+    restrictActionTypeOptions(false);
   }
 
   updateNameSubmittedVisibility();
@@ -717,6 +844,8 @@ function updateNameSubmittedVisibility() {
 
 document.querySelectorAll('input[name="firstSubmission"], input[name="streamlinedAction"]')
   .forEach(input => input.addEventListener('change', updateSubmissionPath));
+document.querySelectorAll('input[name="actionType"]')
+  .forEach(input => input.addEventListener('change', updateNameTypeForAction));
 
 wireToggle('nameType', { nameTypeOtherWrap: 'Other' });
 wireToggle('actionType', {
@@ -725,7 +854,8 @@ wireToggle('actionType', {
   actionOtherWrap: 'Other',
   previousSubmissionWrap: ['Resubmission', 'ChangeOfHoldingName', 'Appeal', 'Other'],
   appealDetailsWrap: 'Appeal',
-  changeDetailsWrap: 'ChangeIfRegistered'
+  changeDetailsWrap: 'ChangeIfRegistered',
+  holdingNameDetailsWrap: 'ChangeOfHoldingName'
 });
 
 document.querySelectorAll('input[name="nameType"]').forEach(r => r.addEventListener('change', updateNameSubmittedVisibility));
@@ -913,21 +1043,50 @@ function oandaEncode(name) {
 function oandaSearchUrl(name) {
   return `https://oanda.sca.org//oanda_name.cgi?p=${oandaEncode(name.trim())}`;
 }
+
+// The complex search puts each space-separated word of the name on its own "name pattern"
+// row (up to 10), leaving the rest as blank "armory description" rows. Verified against
+// real 2/3/4-word complex-search URLs.
+function oandaComplexSearchUrl(fullName) {
+  const words = fullName.trim().split(/\s+/).filter(Boolean).slice(0, 10);
+  const rows = [];
+  for (let i = 1; i <= 10; i++) {
+    const word = words[i - 1];
+    rows.push(word
+      ? `w${i}=1&m${i}=name+pattern&p${i}=${oandaEncode(word)}`
+      : `w${i}=1&m${i}=armory+description&p${i}=`);
+  }
+  return `https://oanda.sca.org//oanda_complex.cgi?${rows.join('&')}&l=500&s=score+and+blazon&d=modern&g=disabled&a=disabled&raw=disabled&rs=all+items`;
+}
 function wireOandaSearchHint(inputId) {
   const input = document.getElementById(inputId);
   const hint = input.parentElement.querySelector('.oanda-hint');
   function update() {
     const name = input.value.trim();
     if (!name) { hint.innerHTML = ''; return; }
-    const url = oandaSearchUrl(name);
-    hint.innerHTML = `Not sure this is actually registered? <a href="${url}" target="_blank" rel="noopener">Search the Ordinary &amp; Armorial for "${name}"</a> to check.`;
+    const url = oandaComplexSearchUrl(name);
+    hint.innerHTML = `To make sure "${name}" was really registered, check that it shows up in the results of <a href="${url}" target="_blank" rel="noopener">this search</a>.`;
   }
   input.addEventListener('input', update);
   update();
   return update;
 }
 wireOandaSearchHint('changePreviousName');
+wireOandaSearchHint('currentHoldingName');
 const updateSocietyNameOandaHint = wireOandaSearchHint('societyName');
+
+function updateNotSureSearch() {
+  const given = document.getElementById('notSureGivenName').value.trim();
+  const byname = document.getElementById('notSureByname').value.trim();
+  const wrap = document.getElementById('notSureSearchWrap');
+  const full = [given, byname].filter(Boolean).join(' ');
+  if (!full) { wrap.innerHTML = ''; return; }
+  const url = oandaComplexSearchUrl(full);
+  wrap.innerHTML = `<a href="${url}" target="_blank" rel="noopener">Check this search</a> and see if "${full}" is any of the results.`;
+}
+['notSureGivenName', 'notSureByname'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateNotSureSearch);
+});
 
 function readFields(blockEl) {
   const get = cls => blockEl.querySelector(`.${cls}`)?.value.trim() || '';
@@ -987,10 +1146,35 @@ function buildChangeSentence() {
   return s;
 }
 
+function buildHoldingNameChangeSentence() {
+  const prevName = document.getElementById('prevSubmitted').value.trim();
+  const holdingName = document.getElementById('currentHoldingName').value.trim();
+  if (!prevName && !holdingName) return '';
+  const month = document.getElementById('returnedMonth').value;
+  const year = normalizeLoarYear(document.getElementById('returnedYear').value.trim());
+  const monthYear = (month && year) ? `${monthName(month)} ${year}` : '';
+  const link = buildLoarUrl(year, month);
+
+  const parts = [];
+  if (prevName) {
+    let p = `The previously submitted name of ${prevName} was returned`;
+    if (monthYear) p += ` on the ${monthYear} LOAR`;
+    if (link) p += `, ${link}`;
+    parts.push(p);
+  }
+  if (holdingName) {
+    parts.push(`the holding name of ${holdingName} was registered instead`);
+  }
+  let s = parts.join(prevName && holdingName ? ', and ' : '');
+  s += holdingName ? '; submitter would now like to change this holding name.' : '.';
+  return s;
+}
+
 function buildAppealOrChangeSentence() {
   const actionType = getEffectiveActionType();
   if (actionType === 'Appeal') return buildAppealSentence();
   if (actionType === 'ChangeIfRegistered') return buildChangeSentence();
+  if (actionType === 'ChangeOfHoldingName') return buildHoldingNameChangeSentence();
   return '';
 }
 
@@ -1468,6 +1652,9 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   document.querySelectorAll('.source-fetch-hint').forEach(el => { el.hidden = true; el.textContent = ''; });
   document.getElementById('returnedLoarLinkWrap').innerHTML = '';
   document.getElementById('changeLoarLinkWrap').innerHTML = '';
+  restrictActionTypeOptions(false);
+  document.getElementById('nameTypeIntro').hidden = true;
+  applyNameTypeLabels(NAME_TYPE_LABELS.default);
   [gn2Block, ...bynameBlocks.map(b => b.block)].forEach(block => {
     const cultureInput = block.querySelector('.f-culture');
     cultureInput.readOnly = true;
