@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlantia Name Submission — Form Filler</title>
+<style>
+.field { margin-bottom: 16px; }
+.field input:not([type="radio"]):not([type="checkbox"]), .field textarea { width: 100%; box-sizing: border-box; }
+.field > p { margin-top: 0; margin-bottom: 0; font-size: 0.85em; font-style: italic; }
+input[readonly] { background: #eee; color: #666; cursor: not-allowed; }
+input.field-error { border-color: #a00; background: #fee; }
+.date-warning { font-size: 0.85em; margin: 4px 0 0; }
+.date-warning.date-error { color: #a00; }
+.date-warning.date-info { color: #555; font-style: italic; }
+.year-warning { color: #a00; font-size: 0.85em; margin: 4px 0 0; }
+.culture-constrained-note { color: #555; font-size: 0.85em; font-style: italic; margin: 4px 0 0; }
+.source-fetch-hint { color: #666; font-size: 0.8em; font-style: italic; margin: 4px 0 0; }
+[hidden] { display: none !important; }
+.choice-row { display: block; }
+.choice-row > label.pill { display: block; margin-bottom: 8px; }
+.sub-choice { display: block; margin-bottom: 8px; }
+.sub-choice { margin-left: 24px; }
+
+.layout { display: block; }
+#previewPane { display: none; }
+.preview-note { font-size: 0.85em; font-style: italic; margin: 4px 0 12px; }
+#previewFrame { width: 100%; height: 80vh; border: 1px solid #999; }
+#previewStatus { font-size: 0.85em; min-height: 1.2em; }
+@media (min-width: 900px) {
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  #previewPane { display: block; position: sticky; top: 12px; }
+}
+</style>
+</head>
+<body>
+<h1>Atlantia Name Submission</h1>
+  <p class="intro">
+This webpage generates a correctly-filled-out copy of Atlantia's official individual name submission form PDF. It only formats what you enter into the form and helps you to navigate through the requirements - it does not check your name for conflict or registerability. Please give the filled-out PDF to a warranted herald, who will send it on to Ibis if it passes a conflict check. 
+  </p>
+  <p class="preview-note">Note: on a wide enough screen, this page shows a live preview of the PDF as you fill out the form. This won't work on mobile or in Safari, but the PDF download should still work at the end.</p>
+
+  <div class="layout">
+  <form id="nameForm">
+    <fieldset id="submissionPathFieldset">
+      <legend>Is this your first SCA name submission?</legend>
+<p>Note: If you gave an "SCA name" when you signed up to be a member of the SCA, that does not mean you registered a name. If you did not go through the process with a herald and give $10 to the College of Heralds, your name is unregistered. You can <a href="https://oanda.sca.org//oanda_np.cgi">search the database of all registered names</a> to double-check if your name is registered.</p>
+      <div class="choice-row" id="firstSubmissionChoices">
+        <label class="pill"><input type="radio" name="firstSubmission" value="yes"> yes - I'm trying to register my first and only name</label>
+        <label class="pill"><input type="radio" name="firstSubmission" value="no"> no - I'm trying to do something else</label>
+      </div>
+      <div class="sub-choice" id="whatDoingWrap" hidden>
+        <div class="field">
+          <label>What are you trying to do?</label>
+          <div class="choice-row" id="streamlinedActionChoices">
+            <label class="pill"><input type="radio" name="streamlinedAction" value="alternateNew"> Register an additional new name as an extra alternate name</label>
+            <label class="pill"><input type="radio" name="streamlinedAction" value="householdNew"> Register a new name for a household or group (not an individual)</label>
+            <label class="pill"><input type="radio" name="streamlinedAction" value="fullQuestions"> File an appeal, resubmission or change</label>
+            <label class="pill"><input type="radio" name="streamlinedAction" value="other"> Other — show me all the options</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+<fieldset id="nameTypeFieldset" hidden>
+      <legend>Name Type</legend>
+      <div class="choice-row" id="nameTypeChoices">
+        <label class="pill"><input type="radio" name="nameType" value="Primary"> Primary - the main name I want to be referred to by.</label>
+        <label class="pill"><input type="radio" name="nameType" value="Alternate"> Alternate - an extra name I'd like to register, eg. for a second persona.</label>
+        <label class="pill"><input type="radio" name="nameType" value="Household"> Household - a name for a group of people, not for an individual.</label>
+        <label class="pill"><input type="radio" name="nameType" value="Other"> Other</label>
+      </div>
+      <div class="sub-choice" id="nameTypeOtherWrap" hidden>
+        <div class="field">
+          <label for="nameTypeOtherText">Specify other name type</label>
+          <input type="text" id="nameTypeOtherText" name="Other name type">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset id="actionTypeFieldset" hidden>
+      <legend>Action Type</legend>
+<p>If you gave a Society name when you signed up for an SCA membership, this does NOT mean you registered an SCA name. You can give an unregistered name for your membership card. You have only registered your name if you registered it with the College of Heralds and paid for the submission. If you're not sure whether you registered a name, try <a href="https://oanda.sca.org//oanda_complex.cgi?w1=1&m1=name+pattern&p1=Write+your+first+name+here&w2=1&m2=name+pattern&p2=Write+your+second+name+here&w3=1&m3=armory+description&p3=&w4=1&m4=armory+description&p4=&w5=1&m5=armory+description&p5=&w6=1&m6=armory+description&p6=&w7=1&m7=armory+description&p7=&w8=1&m8=armory+description&p8=&w9=1&m9=armory+description&p9=&w10=1&m10=armory+description&p10=&l=500&s=name+only&d=modern&g=disabled&a=disabled&raw=disabled&rs=all+items">searching the Ordinary & Armorial</a>.
+      <div class="choice-row" id="actionTypeChoices">
+        <label class="pill"><input type="radio" name="actionType" value="New">New name (never submitted before)</label>
+        <label class="pill"><input type="radio" name="actionType" value="Resubmission">Resubmission (my name was returned and I want to try again)</label>
+        <div class="sub-choice" id="resubWrap" hidden>
+          <div class="choice-row">
+            <label class="pill"><input type="radio" name="resub" value="Kingdom">My kingdom returned my name</label>
+            <label class="pill"><input type="radio" name="resub" value="Laurel">My kingdom passed my name, but Laurel (the Society level decisionmaker) returned it</label>
+          </div>
+<p>If you're not sure whether your name was returned at Kingdom level or Laurel level, consider the timeline; Kingdom would have returned your name a month or two after you submitted it, whereas Laurel would have returned your name six months to a year later. If your name was returned on an LOAR, it was returned by Laurel.</p>
+        </div>
+        <label class="pill"><input type="radio" name="actionType" value="ChangeIfRegistered">Change (I have an existing name and want to edit it)</label>
+        <div class="sub-choice" id="changeWrap" hidden>
+          <div class="choice-row">
+            <label class="pill"><input type="radio" name="change" value="Release">I don't want my former name anymore - someone else can have it.</label>
+            <label class="pill"><input type="radio" name="change" value="Retain">I want to keep my old name on record as an alternate/backup name for me.</label>
+          </div>
+        </div>
+        <label class="pill"><input type="radio" name="actionType" value="ChangeOfHoldingName">Change of Holding Name (I was assigned a holding name and want to change it)</label>
+        <label class="pill"><input type="radio" name="actionType" value="Appeal"> Appeal (my name was returned and I think it should have been accepted)</label>
+        <label class="pill"><input type="radio" name="actionType" value="Other"> Other</label>
+      </div>
+
+      <div class="sub-choice" id="actionOtherWrap" hidden>
+        <div class="field">
+          <label for="actionOtherText">Specify other action</label>
+          <input type="text" id="actionOtherText" name="Other (specify)">
+        </div>
+      </div>
+
+
+      <div class="grid" id="previousSubmissionWrap" style="margin-top:14px;" hidden>
+        <div class="field full">
+          <label for="prevSubmitted">++ Name(s) previously submitted but not registered <span class="opt">(if any)</span></label>
+          <input type="text" id="prevSubmitted" name="Name(s) previously submitted but not registered if any">
+        </div>
+        <div class="field">
+          <label for="kingdomFrom">What kingdom did you previously submit your name through? (If you're not sure, check my <a href="https://pre1600.events/">map of kingdoms and events</a> or the <a href="https://www.sca.org/about/kingdoms/">official list of kingdoms</a>.)</label>
+          <input type="text" id="kingdomFrom" name="Kingdom submitted from">
+        </div>
+        <div class="field">
+          <label>What month was your name returned? (ie. what month did you get the notification that your submission wasn't accepted for registration?)</label>
+          <select id="returnedMonth">
+            <option value="">— month —</option>
+            <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+            <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+            <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+            <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>And what year was your name returned?</label>
+          <input type="number" id="returnedYear" placeholder="e.g. 2026">
+          <p class="year-warning" hidden></p>
+        </div>
+        <div class="field full" id="returnedLoarLinkWrap"></div>
+      </div>
+
+      <div class="sub-choice" id="appealDetailsWrap" hidden>
+        <div class="field">
+          <label>Why was your name returned? You should have been given a reason (a specific rule that was broken) in the return notification.</label>
+          <input type="text" id="appealRejectionReason">
+        </div>
+        <div class="field">
+          <label>What new evidence or rule change do you believe should change the outcome?</label>
+          <textarea id="appealBasis" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="sub-choice" id="changeDetailsWrap" hidden>
+        <div class="field">
+          <label>Your previously registered name</label>
+          <input type="text" id="changePreviousName">
+          <p class="oanda-hint"></p>
+        </div>
+        <div class="field">
+          <label>Month it was accepted</label>
+          <select id="changeAcceptedMonth">
+            <option value="">— month —</option>
+            <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+            <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+            <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+            <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Year it was accepted</label>
+          <input type="number" id="changeAcceptedYear" placeholder="e.g. 2024">
+          <p class="year-warning" hidden></p>
+        </div>
+        <div class="field" id="changeLoarLinkWrap"></div>
+      </div>
+    </fieldset>
+
+
+    <fieldset>
+        <div class="field full" id="societyNameWrap" hidden>
+          <label for="societyName">Your primary SCA name</label>
+          <input type="text" id="societyName" name="Society Name">
+<p>If you don't have an SCA name yet, put the name you are submitting as your "SCA Name".</p>
+<p class="oanda-hint"></p>
+        </div>
+        <div class="field full" id="nameSubmittedWrap" hidden>
+          <label for="nameSubmitted">The name you are submitting on this form</label>
+          <input type="text" id="nameSubmitted" name="Name being submitted if different from above">
+        </div>
+        <div class="field full">
+          <label for="modernName">Modern (legal / mundane) name</label>
+          <input type="text" id="modernName" name="Modern Name">
+        </div>
+        <div class="field full">
+          <label for="address1">Address</label>
+          <input type="text" id="address1" name="Address" placeholder="Street address">
+        </div>
+        <div class="field full">
+          <label for="address2">Address <span class="opt">(line 2)</span></label>
+          <input type="text" id="address2" name="Address Line 2" placeholder="City, State, ZIP code">
+        </div>
+        <div class="field">
+          <label for="phone">Your phone number</label>
+          <input type="tel" id="phone" name="Phone Number">
+<p>We ask for your contact details because (among other reasons) when you register a name, that means that nobody in the future can register a very similar name without your permission. People might want to send you a text or email to ask if it's OK to register a similar name to the one you've taken. If you don't want this to happen, you can issue a blanket permission to conflict so that people don't need to ask you.</p>
+        </div>
+        <div class="field">
+          <label for="email">E-mail Address</label>
+          <input type="email" id="email" name="Email Address">
+        </div>
+        <div class="field">
+          <label for="branchName">Your local group</label>
+          <input type="text" id="branchName" name="Branch Name" placeholder="Barony/Shire/Canton of...">
+        </div>
+        <div class="field">
+          <label for="dateSubmitted">Date Submitted</label>
+          <input type="text" id="dateSubmitted" name="Date Submitted" placeholder="MM/DD/YYYY">
+        </div>
+</fieldset>
+<fieldset>
+      <legend>Consulting Herald</legend>
+        <div class="field">
+          <label for="consultingHerald">Herald's SCA name</label>
+          <input type="text" id="consultingHerald" name="Consulting Herald">
+<p>This is the name of a <b>warranted</b> Atlantian herald who is helping you with your submission. You can leave this blank if you're not sure yet, and let them fill in their own name once you find a herald.</p> 
+        </div>
+        <div class="field">
+          <label for="heraldContact">Herald's E-mail/Phone</label>
+          <input type="text" id="heraldContact" name="Heralds EmailPhone">
+<p>If you're not sure the best way to contact your herald, leave this blank and let them fill it in.</p>
+        </div>
+</fieldset>
+
+
+    <fieldset>
+      <legend>Name Processing Preferences</legend>
+      <p class="field-note">When you submit a name to the College, sometimes they can accept it as-is, sometimes they have to return it to you so you can try again, and sometimes there's a small tweak that can turn an unregisterable name into a registerable one. For example, if you made a small grammar mistake in forming a patronymic, the College can fix your grammar mistake and accept your name. What would you prefer?</p>
+      <div class="choice-row" id="prefChoices">
+        <label class="pill"><input type="radio" name="pref" value="notAccept"> Don't change my name at all. If there's a problem with me, please return it to me so that I can change it myself and resubmit.</label>
+        <label class="pill"><input type="radio" name="pref" value="necessary"> Only change my name if it's necessary, but any necessary changes are fine.</label>
+        <label class="pill"><input type="radio" name="pref" value="authentic"> I'd like help ensuring my name is historically authentic and I actively want the College to change my name to whatever the most authentic version would be.</label>
+        <label class="pill"><input type="radio" name="pref" value="acceptFollowing"> I'm okay with some changes, but not others.</label>
+      </div>
+      <div class="sub-choice" id="acceptFollowingWrap" hidden>
+        <div class="field">
+          <label for="acceptFollowingText">What changes are you OK with?</label>
+          <input type="text" id="acceptFollowingText" name="changes I will accept to my name">
+        </div>
+      </div>
+
+      <div class="sub-choice" id="holdingNamePreferenceWrap" hidden>
+        <div class="field">
+          <label class="pill" style="width:fit-content;">
+            <input type="checkbox" id="noHoldingNamePreference">
+            Tick this box to block the College from creating a holding name - a temporary name that your armory can be filed under, if your armory is accepted but your name isn't. Note that ticking this box means that, if your name is returned, your armory also can't be accepted. 
+          </label>
+        </div>
+      </div>
+
+      <div class="sub-choice" id="authenticQuestionsWrap" hidden>
+        <div class="field">
+          <label for="authenticCentury">What century should your name be documentable to?</label>
+          <input type="text" id="authenticCentury">
+        </div>
+        <div class="field">
+          <label for="authenticCulture">What culture or language do you want your name to be authentic for?</label>
+          <input type="text" id="authenticCulture">
+        </div>
+      </div>
+
+      <div id="preferenceDetailWrap" hidden>
+        <div class="field full inline-text" style="margin-top:16px;">
+          <label>If my name must be changed, I care most about</label>
+        </div>
+        <div class="choice-row" id="priorityChoices">
+          <label class="pill"><input type="radio" name="priority" value="none"> No preference</label>
+          <label class="pill"><input type="radio" name="priority" value="meaning"> Keeping the meaning the same</label>
+          <label class="pill"><input type="radio" name="priority" value="sound"> Keeping the sound the same</label>
+          <label class="pill"><input type="radio" name="priority" value="spelling"> Keeping the spelling the same</label>
+          <label class="pill"><input type="radio" name="priority" value="language"> Keeping the same language and/or culture</label>
+        </div>
+        <div class="field full inline-text">
+<p> Please specify the meaning/sound/spelling/language culture that you want us to preserve. For example: "The name should sound like Katie but the spelling can change to Katy or Catie as necessary", "The name should use a spelling with a J in it", "the name should be Norse", "the name should have a meaning relating to lions or cats", "my dad's name was Paul so please keep the patronymic meaning daughter of Paul". That way, if the heralds have to change your name, we can keep what is important to you.</p>
+          <label for="prioritySpecify">Specify the meaning/sound/spelling/language/culture that you want us to preserve:</label>
+          <input type="text" id="prioritySpecify" name="Please specify meaning sound spelling or language andor culture desired" placeholder='Meaning/sound/spelling/language/culture that you want'>
+        </div>
+
+        <div class="grid" style="margin-top:16px;">
+          <div class="field">
+            <label>Desired gender of name</label>
+<p>Note: The heralds do not know, or care, what gender <b>you</b> are. We only need to know what gender you want this name to be, so that we can make sure the grammar is correct.</p>
+            <div class="choice-row">
+              <label class="pill"><input type="radio" name="gender" value="male"> Male</label>
+              <label class="pill"><input type="radio" name="gender" value="female"> Female</label>
+              <label class="pill"><input type="radio" name="gender" value="neutral"> Neutral</label>
+              <label class="pill"><input type="radio" name="gender" value="dont care"> Don't care</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Holding Name &amp; Documentation</legend>
+      <input type="checkbox" id="noHoldingName" name="I will NOT allow the creation of a holding name I understand that if my name submission is returned then my other" hidden>
+
+      <div id="householdDocsWrap" hidden>
+        <div class="field full">
+          <label>Name Documentation and Consultation Notes</label>
+          <p>Household/group names are more complex to document, so please just fill in the documentation manually (ignore our given name/ byname form-filler). Any appeal or change context you filled in above will be added automatically.</p>
+        </div>
+        <div class="field full">
+          <label for="householdNotes">Documentation notes</label>
+          <textarea id="householdNotes" rows="4"></textarea>
+        </div>
+      </div>
+
+
+      <div id="structuredDocsWrap">
+        <div class="field full" style="margin-top:14px;">
+          <label>Name Documentation and Consultation Notes</label>
+          <p>This section will write itself automatically if you fill in the fields below. We need to fully cite each source that you used. For example, if you used an article called "1001 Cool Medieval Arabic Names" by Herald McHeraldface that you found on cool-SCA-name-articles dot com, you need to put "1001 Cool Medieval Arabic Names" as the source title, Herald McHeraldface as the source author, and cool-SCA-name-articles dot com as the source URL.</p>
+        </div>
+
+        <fieldset id="gn1Block">
+          <legend>Given name</legend>
+          <div class="field">
+            <label>Given name</label>
+            <input type="text" class="f-name">
+          </div>
+          <div class="field">
+            <label>Gender</label>
+            <select class="f-gender">
+              <option value="">— not specified —</option>
+              <option value="masculine">Masculine</option>
+              <option value="feminine">Feminine</option>
+              <option value="neutral">Neutral</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Language or culture</label>
+            <input type="text" class="f-culture" placeholder="e.g. French, Arabic">
+          </div>
+          <div class="field">
+            <label>Date in source</label>
+            <input type="text" class="f-date" placeholder="e.g. 1250">
+            <p class="date-warning" hidden></p>
+          </div>
+          <div class="field">
+            <label>Title of source, eg. "The History of Greek Names" or "A Collection Of Byzantine Names From Tax Records"</label>
+            <input type="text" class="f-title">
+          </div>
+          <div class="field">
+            <label>Author of source (the name of the writer of the article/book)</label>
+            <input type="text" class="f-author">
+          </div>
+          <div class="field">
+            <label>Source URL</label>
+            <input type="text" class="f-url">
+            <p class="source-fetch-hint" hidden></p>
+          </div>
+        </fieldset>
+
+        <div class="field full">
+          <label class="pill" style="width:fit-content;">
+            <input type="checkbox" id="addAnotherGivenName">
+            Add another given name
+          </label>
+        </div>
+
+        <fieldset id="gn2Block" hidden>
+          <legend>Second given name</legend>
+          <div class="field">
+            <label>Given name</label>
+            <input type="text" class="f-name">
+          </div>
+          <div class="field">
+            <label>Gender</label>
+            <select class="f-gender">
+              <option value="">— not specified —</option>
+              <option value="masculine">Masculine</option>
+              <option value="feminine">Feminine</option>
+              <option value="neutral">Neutral</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Language or culture</label>
+            <input type="text" class="f-culture" readonly>
+            <select class="f-culture-choice" hidden></select>
+            <p class="culture-constrained-note" hidden></p>
+            <label class="pill" style="width:fit-content; margin-top:6px;">
+              <input type="checkbox" class="use-different-culture">
+              Use a different language or culture
+            </label>
+          </div>
+          <div class="field culture-mix-wrap" id="cultureMixWrap-gn2" hidden>
+            <label id="cultureMixLabel-gn2"></label>
+            <div class="choice-row">
+              <label class="pill"><input type="radio" name="cultureMixAllowed-gn2" value="yes"> Yes</label>
+              <label class="pill"><input type="radio" name="cultureMixAllowed-gn2" value="no"> No / not sure</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Date in source</label>
+            <input type="text" class="f-date" placeholder="e.g. 1250">
+            <p class="date-warning" hidden></p>
+          </div>
+          <div class="field">
+            <label>Title of source</label>
+            <input type="text" class="f-title">
+          </div>
+          <div class="field">
+            <label>Author of source</label>
+            <input type="text" class="f-author">
+          </div>
+          <div class="field">
+            <label>Source for given name — URL</label>
+            <input type="text" class="f-url">
+            <p class="source-fetch-hint" hidden></p>
+          </div>
+        </fieldset>
+
+        <div class="field full" id="multiGivenNamesWrap" hidden>
+          <label id="multiGivenNamesLabel"></label>
+          <div class="choice-row">
+            <label class="pill"><input type="radio" name="multiGivenNamesAllowed" value="yes"> Yes</label>
+            <label class="pill"><input type="radio" name="multiGivenNamesAllowed" value="no"> No / not sure</label>
+          </div>
+        </div>
+
+        <fieldset id="byn1Block" style="margin-top:14px;">
+          <legend>Byname</legend>
+          <div class="field">
+            <label>Byname</label>
+            <input type="text" class="f-name">
+          </div>
+          <div class="field">
+            <label>Type</label>
+            <select class="byn-type">
+              <option value="">— not specified —</option>
+              <option value="locative">Locative</option>
+              <option value="occupational">Occupational</option>
+              <option value="patronymic">Patronymic</option>
+              <option value="metronymic">Metronymic</option>
+              <option value="descriptive">Descriptive</option>
+              <option value="family surname">Family surname</option>
+              <option value="ethnic">Ethnic/national</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field byn-type-other-wrap" hidden>
+            <label>Specify byname type</label>
+            <input type="text" class="byn-type-other">
+          </div>
+          <div class="field">
+            <label>Gender</label>
+            <select class="f-gender">
+              <option value="">— not specified —</option>
+              <option value="masculine">Masculine</option>
+              <option value="feminine">Feminine</option>
+              <option value="neutral">Neutral</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Language or culture</label>
+            <input type="text" class="f-culture" readonly>
+            <select class="f-culture-choice" hidden></select>
+            <p class="culture-constrained-note" hidden></p>
+            <label class="pill" style="width:fit-content; margin-top:6px;">
+              <input type="checkbox" class="use-different-culture">
+              Use a different language or culture
+            </label>
+          </div>
+          <div class="field culture-mix-wrap" id="cultureMixWrap-byn1" hidden>
+            <label id="cultureMixLabel-byn1"></label>
+            <div class="choice-row">
+              <label class="pill"><input type="radio" name="cultureMixAllowed-byn1" value="yes"> Yes</label>
+              <label class="pill"><input type="radio" name="cultureMixAllowed-byn1" value="no"> No / not sure</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Date in source</label>
+            <input type="text" class="f-date" placeholder="e.g. 1250">
+            <p class="date-warning" hidden></p>
+          </div>
+          <div class="field">
+            <label>Title of source</label>
+            <input type="text" class="f-title">
+          </div>
+          <div class="field">
+            <label>Author of source</label>
+            <input type="text" class="f-author">
+          </div>
+          <div class="field">
+            <label>Source for byname — URL</label>
+            <input type="text" class="f-url">
+            <p class="source-fetch-hint" hidden></p>
+          </div>
+        </fieldset>
+
+        <div class="field full" id="bynameSenaWrap-byn1">
+          <label id="bynameSenaLabel-byn1"></label>
+          <div class="choice-row">
+            <label class="pill"><input type="radio" name="bynameSenaAllowed-byn1" value="yes"> Yes</label>
+            <label class="pill"><input type="radio" name="bynameSenaAllowed-byn1" value="no"> No / not sure</label>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label class="pill" style="width:fit-content;">
+            <input type="checkbox" id="addAnotherByname">
+            Add another byname
+          </label>
+        </div>
+
+        <fieldset id="byn2Block" style="margin-top:14px;" hidden>
+          <legend>Second byname</legend>
+          <div class="field">
+            <label>Byname</label>
+            <input type="text" class="f-name">
+          </div>
+          <div class="field">
+            <label>Type</label>
+            <select class="byn-type">
+              <option value="">— not specified —</option>
+              <option value="locative">Locative</option>
+              <option value="occupational">Occupational</option>
+              <option value="patronymic">Patronymic</option>
+              <option value="metronymic">Metronymic</option>
+              <option value="descriptive">Descriptive</option>
+              <option value="family surname">Family surname</option>
+              <option value="ethnic">Ethnic/national</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field byn-type-other-wrap" hidden>
+            <label>Specify byname type</label>
+            <input type="text" class="byn-type-other">
+          </div>
+          <div class="field">
+            <label>Gender</label>
+            <select class="f-gender">
+              <option value="">— not specified —</option>
+              <option value="masculine">Masculine</option>
+              <option value="feminine">Feminine</option>
+              <option value="neutral">Neutral</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Language or culture</label>
+            <input type="text" class="f-culture" readonly>
+            <select class="f-culture-choice" hidden></select>
+            <p class="culture-constrained-note" hidden></p>
+            <label class="pill" style="width:fit-content; margin-top:6px;">
+              <input type="checkbox" class="use-different-culture">
+              Use a different language or culture
+            </label>
+          </div>
+          <div class="field culture-mix-wrap" id="cultureMixWrap-byn2" hidden>
+            <label id="cultureMixLabel-byn2"></label>
+            <div class="choice-row">
+              <label class="pill"><input type="radio" name="cultureMixAllowed-byn2" value="yes"> Yes</label>
+              <label class="pill"><input type="radio" name="cultureMixAllowed-byn2" value="no"> No / not sure</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Date in source</label>
+            <input type="text" class="f-date" placeholder="e.g. 1250">
+            <p class="date-warning" hidden></p>
+          </div>
+          <div class="field">
+            <label>Title of source</label>
+            <input type="text" class="f-title">
+          </div>
+          <div class="field">
+            <label>Author of source</label>
+            <input type="text" class="f-author">
+          </div>
+          <div class="field">
+            <label>Source for byname — URL</label>
+            <input type="text" class="f-url">
+            <p class="source-fetch-hint" hidden></p>
+          </div>
+        </fieldset>
+
+        <div class="field full" id="bynameSenaWrap-byn2" hidden>
+          <label id="bynameSenaLabel-byn2"></label>
+          <div class="choice-row">
+            <label class="pill"><input type="radio" name="bynameSenaAllowed-byn2" value="yes"> Yes</label>
+            <label class="pill"><input type="radio" name="bynameSenaAllowed-byn2" value="no"> No / not sure</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field full" id="extraNotesWrap">
+        <label for="extraNotes">Additional consultation notes <span class="opt">(optional)</span></label>
+        <textarea id="extraNotes" rows="3"></textarea>
+      </div>
+
+      <div class="field full" id="submittedNameConfirmWrap" hidden>
+        <p><strong>The name you are submitting is: <span id="submittedNameText"></span>.</strong> Please go back and make changes if this is not the name you want.</p>
+      </div>
+
+      <div class="field full">
+        <label for="docNotes">Generated documentation (goes into the PDF as written)</label>
+        <textarea id="docNotes" name="Name Documentation" rows="6" readonly></textarea>
+      </div>
+    </fieldset>
+
+
+  </form>
+
+  <div id="previewPane">
+    <label>Live PDF preview</label>
+    <div id="previewStatus"></div>
+    <iframe id="previewFrame" title="Live PDF preview"></iframe>
+  </div>
+  </div>
+
+  <div class="action-bar">
+    <div>
+      <button type="button" id="generateBtn">Generate &amp; download filled PDF</button>
+      <button type="button" id="resetBtn">Reset form</button>
+      <div class="status" id="status"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script>
+const PDF_BASE64 = "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MDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMjMtMDEtMTFUMjM6MDM6NTYtMDY6MDA8L3htcDpNZXRhZGF0YURhdGU+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpwZGY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGRmLzEuMy8iPgogICAgICAgICA8cGRmOlByb2R1Y2VyPkFjcm9iYXQgRGlzdGlsbGVyIDkuMC4wIChXaW5kb3dzKTwvcGRmOlByb2R1Y2VyPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIj4KICAgICAgICAgPGRjOmZvcm1hdD5hcHBsaWNhdGlvbi9wZGY8L2RjOmZvcm1hdD4KICAgICAgICAgPGRjOnRpdGxlPgogICAgICAgICAgICA8cmRmOkFsdD4KICAgICAgICAgICAgICAgPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ij5NaWNyb3NvZnQgV29yZCAtIG5hbWUtaS5ydGY8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6QWx0PgogICAgICAgICA8L2RjOnRpdGxlPgogICAgICAgICA8ZGM6Y3JlYXRvcj4KICAgICAgICAgICAgPHJkZjpTZXE+CiAgICAgICAgICAgICAgIDxyZGY6bGk+VXNlcjwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpTZXE+CiAgICAgICAgIDwvZGM6Y3JlYXRvcj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIj4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+dXVpZDo5MzQ0ODE2OS1mY2VkLTQ3ZGMtYmQzZi01Yzc2NGUzMzE2ZTA8L3htcE1NOkRvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnV1aWQ6NDRiN2RhYjgtMTMyMC00ZDZkLWI3YjYtMTJhNGQ5YWY0MzRkPC94bXBNTTpJbnN0YW5jZUlEPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6YWRob2N3Zj0iaHR0cDovL25zLmFkb2JlLmNvbS9BY3JvYmF0QWRob2NXb3JrZmxvdy8xLjAvIj4KICAgICAgICAgPGFkaG9jd2Y6c3RhdGU+MTwvYWRob2N3ZjpzdGF0ZT4KICAgICAgICAgPGFkaG9jd2Y6dmVyc2lvbj4xLjE8L2FkaG9jd2Y6dmVyc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/Pg0KZW5kc3RyZWFtDWVuZG9iag0xMSAwIG9iag08PC9BY3JvRm9ybSAyMDEgMCBSL0V4dGVuc2lvbnM8PC9BREJFPDwvQmFzZVZlcnNpb24vMS43L0V4dGVuc2lvbkxldmVsIDM+Pj4+L01ldGFkYXRhIDIgMCBSL1BhZ2VMYWJlbHMgNiAwIFIvUGFnZXMgOCAwIFIvVHlwZS9DYXRhbG9nPj4NZW5kb2JqDTE0IDAgb2JqDTw8L0ZpbHRlci9GbGF0ZURlY29kZS9MZW5ndGggNzQ1Pj5zdHJlYW0N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aWx0ZXIvRmxhdGVEZWNvZGUvRm9ybVR5cGUgMS9MZW5ndGggMjEvTWF0cml4WzEgMCAwIDEgMCAwXS9SZXNvdXJjZXM8PC9Qcm9jU2V0Wy9QREZdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpIidIPqVBw8nXmcgVigAADABQmAtcNCmVuZHN0cmVhbQ1lbmRvYmoNODkgMCBvYmoNPDwvQkJveFswIDAgODUuNjggMTEuNTJdL0ZpbHRlci9GbGF0ZURlY29kZS9Gb3JtVHlwZSAxL0xlbmd0aCAyMS9NYXRyaXhbMSAwIDAgMSAwIDBdL1Jlc291cmNlczw8L1Byb2NTZXRbL1BERl0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCkiJ0g+pUHDydeZyBWKAAAMAFCYC1w0KZW5kc3RyZWFtDWVuZG9iag05MCAwIG9iag08PC9CQm94WzAgMCAxMTYuMTYgMTEuNTJdL0ZpbHRlci9GbGF0ZURlY29kZS9Gb3JtVHlwZSAxL0xlbmd0aCAyMS9NYXRyaXhbMSAwIDAgMSAwIDBdL1Jlc291cmNlczw8L1Byb2NTZXRbL1BERl0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCkiJ0g+pUHDydeZyBWKAAAMAFCYC1w0KZW5kc3RyZWFtDWVuZG9iag05MSAwIG9iag08PC9CQm94WzAgMCAxNDAuODggMTEuNTJdL0ZpbHRlci9GbGF0ZURlY29kZS9Gb3JtVHlwZSAxL0xlbmd0aCAyMS9NYXRyaXhbMSAwIDAgMSAwIDBdL1Jlc291cmNlczw8L1Byb2NTZXRbL1BERl0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCkiJ0g+pUHDydeZyBWKAAAMAFCYC1w0KZW5kc3RyZWFtDWVuZG9iag05MiAwIG9iag08PC9CQm94WzAuMCAwLjAgMzEzLjc2NyAyMC4yMzY0XS9GaWx0ZXIvRmxhdGVEZWNvZGUvRm9ybVR5cGUgMS9MZW5ndGggMjMvTWF0cml4WzEuMCAwLjAgMC4wIDEuMCAwLjAgMC4wXS9SZXNvdXJjZXM8PC9Qcm9jU2V0Wy9QREZdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpIidIPqVBw8nVW4HL1deYCCDAAFtQC9w0KZW5kc3RyZWFtDWVuZG9iag05MyAwIG9iag08PC9CQm94WzAgMCAxNjIuOTYgMTEuNTJdL0ZpbHRlci9GbGF0ZURlY29kZS9Gb3JtVHlwZSAxL0xlbmd0aCAyMS9NYXRyaXhbMSAwIDAgMSAwIDBdL1Jlc291cmNlczw8L1Byb2NTZXRbL1BERl0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCkiJ0g+pUHDydeZyBWKAAAMAFCYC1w0KZW5kc3RyZWFtDWVuZG9iag05NCAwIG9iag08PC9CQm94WzAgMCA4Mi44IDExLjUyXS9GaWx0ZXIvRmxhdGVEZWNvZGUvRm9ybVR5cGUgMS9MZW5ndGggMjEvTWF0cml4WzEgMCAwIDEgMCAwXS9SZXNvdXJjZXM8PC9Qcm9jU2V0Wy9QREZdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpIidIPqVBw8nXmcgVigAADABQmAtcNCmVuZHN0cmVhbQ1lbmRvYmoNOTUgMCBvYmoNPDwvQkJveFswLjAgMC4wIDEwLjIgMTAuMl0vRmlsdGVyL0ZsYXRlRGVjb2RlL0Zvcm1UeXBlIDEvTGVuZ3RoIDg5L01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvRm9udDw8L1phRGIgOTYgMCBSPj4vUHJvY1NldFsvUERGL1RleHRdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpIiSrkMlAwUDA00DOCEEWpXOFceVxOIVz6UYkuSSBBUzNTE4WQNC5DPQNzS0sFQz1TI2NzhZAULqCcobmJqUKID9gQoIhGnqZCSBaXawhXIBdAgAEAVlUSyg0KZW5kc3RyZWFtDWVuZG9iag05NyAwIG9iag08PC9CQm94WzAuMCAwLjAgMTAuMiAxMC4yXS9Gb3JtVHlwZSAxL0xlbmd0aCAzMC9NYXRyaXhbMS4wIDAuMCAwLjAgMS4wIDAuMCAwLjBdL1Jlc291cmNlczw8L1Byb2NTZXRbL1BERl0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCjAuNzQ5MDIzIGcKMCAwIDEwLjIgMTAuMiByZQpmCg0KZW5kc3RyZWFtDWVuZG9iag05OCAwIG9iag08PC9CQm94WzAuMCAwLjAgMTAuMiAxMC4yXS9GaWx0ZXIvRmxhdGVEZWNvZGUvRm9ybVR5cGUgMS9MZW5ndGggMTA1L01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvRm9udDw8L1phRGIgOTYgMCBSPj4vUHJvY1NldFsvUERGL1RleHRdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpIiTLQMzexNDAyVkjnMlAwUDA00DOCEEWpXGlchZiC4Vx5QMF0LqcQLv2oRJckkISpmamJQkgal6GegbmlpYKhnqmRsblCSAoXUM7Q3MRUIcQHbBBQRCNPUyEki8s1hCuQCyDAABxsGWYNCmVuZHN0cmVhbQ1lbmRvYmoNOTkgMCBvYmoNPDwvQkJveFswLjAgMC4wIDEwLjIgMTAuMl0vRmlsdGVyL0ZsYXRlRGVjb2RlL0Zvcm1UeXBlIDEvTGVuZ3RoIDg5L01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvRm9udDw8L1phRGIgMTAwIDAgUj4+L1Byb2NTZXRbL1BERi9UZXh0XT4+L1N1YnR5cGUvRm9ybS9UeXBlL1hPYmplY3Q+PnN0cmVhbQ0KSIkq5DJQMFAwNNAzghBFqVzhXHlcTiFc+lGJLkkgQVMzUxOFkDQuQz0Dc0tLBUM9UyNjc4WQFC6gnKG5ialCiA/YEKCIRp6mQkgWl2sIVyAXQIABAFZVEsoNCmVuZHN0cmVhbQ1lbmRvYmoNMTAxIDAgb2JqDTw8L0JCb3hbMC4wIDAuMCAxMC4yIDEwLjJdL0Zvcm1UeXBlIDEvTGVuZ3RoIDMwL01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvUHJvY1NldFsvUERGXT4+L1N1YnR5cGUvRm9ybS9UeXBlL1hPYmplY3Q+PnN0cmVhbQ0KMC43NDkwMjMgZwowIDAgMTAuMiAxMC4yIHJlCmYKDQplbmRzdHJlYW0NZW5kb2JqDTEwMiAwIG9iag08PC9CQm94WzAuMCAwLjAgMTAuMiAxMC4yXS9GaWx0ZXIvRmxhdGVEZWNvZGUvRm9ybVR5cGUgMS9MZW5ndGggMTA1L01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvRm9udDw8L1phRGIgMTAwIDAgUj4+L1Byb2NTZXRbL1BERi9UZXh0XT4+L1N1YnR5cGUvRm9ybS9UeXBlL1hPYmplY3Q+PnN0cmVhbQ0KSIky0DM3sTQwMlZI5zJQMFAwNNAzghBFqVxpXIWYguFceUDBdC6nEC79qESXJJCEqZmpiUJIGpehnoG5paWCoZ6pkbG5QkgKF1DO0NzEVCHEB2wQUEQjT1MhJIvLNYQrkAsgwAAcbBlmDQplbmRzdHJlYW0NZW5kb2JqDTEwMyAwIG9iag08PC9CQm94WzAuMCAwLjAgMTAuMiAxMC4xOTldL0ZpbHRlci9GbGF0ZURlY29kZS9Gb3JtVHlwZSAxL0xlbmd0aCA5MS9NYXRyaXhbMS4wIDAuMCAwLjAgMS4wIDAuMCAwLjBdL1Jlc291cmNlczw8L0ZvbnQ8PC9aYURiIDEwNCAwIFI+Pi9Qcm9jU2V0Wy9QREYvVGV4dF0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCkiJKuQyUDBQMDTQMwIRhpaWCkWpXOFceVxOIVz6UYkuSSBhUzNTE4WQNC5DPQNzoApDPVMjYyOFkBQukBZzE1OFEB+wMUARjTxNhZAsLtcQrkAugAADAHzlEzYNCmVuZHN0cmVhbQ1lbmRvYmoNMTA1IDAgb2JqDTw8L0JCb3hbMC4wIDAuMCAxMC4yIDEwLjE5OV0vRmlsdGVyL0ZsYXRlRGVjb2RlL0Zvcm1UeXBlIDEvTGVuZ3RoIDEwOC9NYXRyaXhbMS4wIDAuMCAwLjAgMS4wIDAuMCAwLjBdL1Jlc291cmNlczw8L0ZvbnQ8PC9aYURiIDEwNCAwIFI+Pi9Qcm9jU2V0Wy9QREYvVGV4dF0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCkiJMtAzN7E0MDJWSOcyUDBQMDTQMwIRhpaWCkWpXGlchdiEw7nygMLpXE4hXPpRiS5JIClTM1MThZA0LkM9A3OgKkM9UyNjI4WQFC6QNnMTU4UQH7BRQBGNPE2FkCwu1xCuQC6AAAMAhvoaQw0KZW5kc3RyZWFtDWVuZG9iag0xMDYgMCBvYmoNPDwvQkJveFswLjAgMC4wIDEwLjIgMTAuMTk5XS9Gb3JtVHlwZSAxL0xlbmd0aCAzMi9NYXRyaXhbMS4wIDAuMCAwLjAgMS4wIDAuMCAwLjBdL1Jlc291cmNlczw8L1Byb2NTZXRbL1BERl0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCjAuNzQ5MDIzIGcKMCAwIDEwLjIgMTAuMTk5IHJlCmYKDQplbmRzdHJlYW0NZW5kb2JqDTEwNyAwIG9iag08PC9CQm94WzAuMCAwLjAgMTAuMjAwMSAxMC4yMDAxXS9GaWx0ZXIvRmxhdGVEZWNvZGUvRm9ybVR5cGUgMS9MZW5ndGggOTAvTWF0cml4WzEuMCAwLjAgMC4wIDEuMCAwLjAgMC4wXS9SZXNvdXJjZXM8PC9Gb250PDwvWmFEYiAxMDggMCBSPj4vUHJvY1NldFsvUERGL1RleHRdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpIiSrkMlAwUDA00DMyMDCE00WpXOFceVxOIVz6UYkuSSBxUzNTE4WQNC5DPQMLBUM9UyNjc4WQFC6gjKG5ialCiA/YIKCIRp6mQkgWl2sIVyAXQIABAJb1E3sNCmVuZHN0cmVhbQ1lbmRvYmoNMTA5IDAgb2JqDTw8L0JCb3hbMC4wIDAuMCAxMC4yMDAxIDEwLjIwMDFdL0ZpbHRlci9GbGF0ZURlY29kZS9Gb3JtVHlwZSAxL0xlbmd0aCAxMDcvTWF0cml4WzEuMCAwLjAgMC4wIDEuMCAwLjAgMC4wXS9SZXNvdXJjZXM8PC9Gb250PDwvWmFEYiAxMDggMCBSPj4vUHJvY1NldFsvUERGL1RleHRdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpIiTLQMzexNDAyVkjnMlAwUDA00DMyMDCE00WpXGlchbikwrnygFLpXE4hXPpRiS5JIDlTM1MThZA0LkM9AwsFQz1TI2NzhZAULqCMobmJqUKID9gwoIhGnqZCSBaXawhXIBdAgAEADAYbOQ0KZW5kc3RyZWFtDWVuZG9iag0xMTAgMCBvYmoNPDwvQkJveFswLjAgMC4wIDEwLjIwMDEgMTAuMjAwMV0vRmlsdGVyL0ZsYXRlRGVjb2RlL0Zvcm1UeXBlIDEvTGVuZ3RoIDM5L01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvUHJvY1NldFsvUERGXT4+L1N1YnR5cGUvRm9ybS9UeXBlL1hPYmplY3Q+PnN0cmVhbQ0KSIky0DM3sTQwMlZI5zJQMFAwNNAzMjAwhNNFqVxpXAABBgB+Ggb+DQplbmRzdHJlYW0NZW5kb2JqDTExMSAwIG9iag08PC9CQm94WzAuMCAwLjAgODMuNjYyIDIwLjAyOV0vRmlsdGVyL0ZsYXRlRGVjb2RlL0xlbmd0aCAyMy9SZXNvdXJjZXM8PC9Gb250PDwvSGVsdiAxMTIgMCBSPj4vUHJvY1NldFsvUERGXT4+Pj5zdHJlYW0NCkiJ0g+pUHDydVbgcvV15gIIMAAW1AL3DQplbmRzdHJlYW0NZW5kb2JqDTExMyAwIG9iag08PC9EaWZmZXJlbmNlc1syNC9icmV2ZS9jYXJvbi9jaXJjdW1mbGV4L2RvdGFjY2VudC9odW5nYXJ1bWxhdXQvb2dvbmVrL3JpbmcvdGlsZGUgMzkvcXVvdGVzaW5nbGUgOTYvZ3JhdmUgMTI4L2J1bGxldC9kYWdnZXIvZGFnZ2VyZGJsL2VsbGlwc2lzL2VtZGFzaC9lbmRhc2gvZmxvcmluL2ZyYWN0aW9uL2d1aWxzaW5nbGxlZnQvZ3VpbHNpbmdscmlnaHQvbWludXMvcGVydGhvdXNhbmQvcXVvdGVkYmxiYXNlL3F1b3RlZGJsbGVmdC9xdW90ZWRibHJpZ2h0L3F1b3RlbGVmdC9xdW90ZXJpZ2h0L3F1b3Rlc2luZ2xiYXNlL3RyYWRlbWFyay9maS9mbC9Mc2xhc2gvT0UvU2Nhcm9uL1lkaWVyZXNpcy9aY2Fyb24vZG90bGVzc2kvbHNsYXNoL29lL3NjYXJvbi96Y2Fyb24gMTYwL0V1cm8gMTY0L2N1cnJlbmN5IDE2Ni9icm9rZW5iYXIgMTY4L2RpZXJlc2lzL2NvcHlyaWdodC9vcmRmZW1pbmluZSAxNzIvbG9naWNhbG5vdC8ubm90ZGVmL3JlZ2lzdGVyZWQvbWFjcm9uL2RlZ3JlZS9wbHVzbWludXMvdHdvc3VwZXJpb3IvdGhyZWVzdXBlcmlvci9hY3V0ZS9tdSAxODMvcGVyaW9kY2VudGVyZWQvY2VkaWxsYS9vbmVzdXBlcmlvci9vcmRtYXNjdWxpbmUgMTg4L29uZXF1YXJ0ZXIvb25laGFsZi90aHJlZXF1YXJ0ZXJzIDE5Mi9BZ3JhdmUvQWFjdXRlL0FjaXJjdW1mbGV4L0F0aWxkZS9BZGllcmVzaXMvQXJpbmcvQUUvQ2NlZGlsbGEvRWdyYXZlL0VhY3V0ZS9FY2lyY3VtZmxleC9FZGllcmVzaXMvSWdyYXZlL0lhY3V0ZS9JY2lyY3VtZmxleC9JZGllcmVzaXMvRXRoL050aWxkZS9PZ3JhdmUvT2FjdXRlL09jaXJjdW1mbGV4L090aWxkZS9PZGllcmVzaXMvbXVsdGlwbHkvT3NsYXNoL1VncmF2ZS9VYWN1dGUvVWNpcmN1bWZsZXgvVWRpZXJlc2lzL1lhY3V0ZS9UaG9ybi9nZXJtYW5kYmxzL2FncmF2ZS9hYWN1dGUvYWNpcmN1bWZsZXgvYXRpbGRlL2FkaWVyZXNpcy9hcmluZy9hZS9jY2VkaWxsYS9lZ3JhdmUvZWFjdXRlL2VjaXJjdW1mbGV4L2VkaWVyZXNpcy9pZ3JhdmUvaWFjdXRlL2ljaXJjdW1mbGV4L2lkaWVyZXNpcy9ldGgvbnRpbGRlL29ncmF2ZS9vYWN1dGUvb2NpcmN1bWZsZXgvb3RpbGRlL29kaWVyZXNpcy9kaXZpZGUvb3NsYXNoL3VncmF2ZS91YWN1dGUvdWNpcmN1bWZsZXgvdWRpZXJlc2lzL3lhY3V0ZS90aG9ybi95ZGllcmVzaXNdL1R5cGUvRW5jb2Rpbmc+Pg1lbmRvYmoNMTE0IDAgb2JqDTw8L0JCb3hbMC4wIDAuMCAxMC4yIDEwLjJdL0ZpbHRlci9GbGF0ZURlY29kZS9Gb3JtVHlwZSAxL0xlbmd0aCA4OS9NYXRyaXhbMS4wIDAuMCAwLjAgMS4wIDAuMCAwLjBdL1Jlc291cmNlczw8L0ZvbnQ8PC9aYURiIDExNSAwIFI+Pi9Qcm9jU2V0Wy9QREYvVGV4dF0+Pi9TdWJ0eXBlL0Zvcm0vVHlw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MCAwIDEwLjg1NDYgMTEuMiByZQpmCg0KZW5kc3RyZWFtDWVuZG9iag0xNjcgMCBvYmoNPDwvQkJveFswLjAgMC4wIDEwLjIgMTEuMl0vRm9ybVR5cGUgMS9MZW5ndGggODUvTWF0cml4WzEuMCAwLjAgMC4wIDEuMCAwLjAgMC4wXS9SZXNvdXJjZXM8PC9Gb250PDwvWmFEYiAxNjggMCBSPj4vUHJvY1NldFsvUERGL1RleHRdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpxCjEgMSA4LjIgOS4yIHJlClcKbgpCVAovWmFEYiA3LjQxOTUgVGYKMi4yNzY5IDMuMDg4NSBUZAo3LjE0NSBUTAowIDAgVGQKKG4pIFRqCkVUClEKDQplbmRzdHJlYW0NZW5kb2JqDTE2OSAwIG9iag08PC9CQm94WzAuMCAwLjAgMTAuMiAxMS4yXS9GaWx0ZXIvRmxhdGVEZWNvZGUvRm9ybVR5cGUgMS9MZW5ndGggMTEzL01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvRm9udDw8L1phRGIgMTY4IDAgUj4+L1Byb2NTZXRbL1BERi9UZXh0XT4+L1N1YnR5cGUvRm9ybS9UeXBlL1hPYmplY3Q+PnN0cmVhbQ0KSIkkjLEKg0AQRPv5iiljs9k9L7m7VrSzEQ4EO0OikEJI/r/IEpth3mMYlRSLhpY7lEpTCTTz+L6w4QOjMTuWU804fLejq7gua/9gkmjlxrohSEj3wlY0ZxdPJLHoZfwfO1+OhvWNoWLCT4ABAKzyGJINCmVuZHN0cmVhbQ1lbmRvYmoNMTcwIDAgb2JqDTw8L0JCb3hbMC4wIDAuMCAxMC4yIDExLjJdL0Zvcm1UeXBlIDEvTGVuZ3RoIDMwL01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvUHJvY1NldFsvUERGXT4+L1N1YnR5cGUvRm9ybS9UeXBlL1hPYmplY3Q+PnN0cmVhbQ0KMC43NDkwMjMgZwowIDAgMTAuMiAxMS4yIHJlCmYKDQplbmRzdHJlYW0NZW5kb2JqDTE3MSAwIG9iag08PC9CQm94WzAuMCAwLjAgMTAuMiAxMS4yXS9Gb3JtVHlwZSAxL0xlbmd0aCA4NS9NYXRyaXhbMS4wIDAuMCAwLjAgMS4wIDAuMCAwLjBdL1Jlc291cmNlczw8L0ZvbnQ8PC9aYURiIDE3MiAwIFI+Pi9Qcm9jU2V0Wy9QREYvVGV4dF0+Pi9TdWJ0eXBlL0Zvcm0vVHlwZS9YT2JqZWN0Pj5zdHJlYW0NCnEKMSAxIDguMiA5LjIgcmUKVwpuCkJUCi9aYURiIDcuNDE5NSBUZgoyLjI3NjkgMy4wODg1IFRkCjcuMTQ1IFRMCjAgMCBUZAoobikgVGoKRVQKUQoNCmVuZHN0cmVhbQ1lbmRvYmoNMTczIDAgb2JqDTw8L0JCb3hbMC4wIDAuMCAxMC4yIDExLjJdL0ZpbHRlci9GbGF0ZURlY29kZS9Gb3JtVHlwZSAxL0xlbmd0aCAxMTMvTWF0cml4WzEuMCAwLjAgMC4wIDEuMCAwLjAgMC4wXS9SZXNvdXJjZXM8PC9Gb250PDwvWmFEYiAxNzIgMCBSPj4vUHJvY1NldFsvUERGL1RleHRdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQpIiSSMsQqDQBBE+/mKKWOz2T0vubtWtLMRDgQ7Q6KQQkj+v8gSm2HeYxiVFIuGljuUSlMJNPP4vrDhA6MxO5ZTzTh8t6OruC5r/2CSaOXGuiFISPfCVjRnF08ksehl/B87X46G9Y2hYsJPgAEArPIYkg0KZW5kc3RyZWFtDWVuZG9iag0xNzQgMCBvYmoNPDwvQkJveFswLjAgMC4wIDEwLjIgMTEuMl0vRm9ybVR5cGUgMS9MZW5ndGggMzAvTWF0cml4WzEuMCAwLjAgMC4wIDEuMCAwLjAgMC4wXS9SZXNvdXJjZXM8PC9Qcm9jU2V0Wy9QREZdPj4vU3VidHlwZS9Gb3JtL1R5cGUvWE9iamVjdD4+c3RyZWFtDQowLjc0OTAyMyBnCjAgMCAxMC4yIDExLjIgcmUKZgoNCmVuZHN0cmVhbQ1lbmRvYmoNMTc1IDAgb2JqDTw8L0JCb3hbMC4wIDAuMCAxMC4yIDExLjJdL0Zvcm1UeXBlIDEvTGVuZ3RoIDg1L01hdHJpeFsxLjAgMC4wIDAuMCAxLjAgMC4wIDAuMF0vUmVzb3VyY2VzPDwvRm9udDw8L1phRGIgMTc2IDAgUj4+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IDY4IDAgUiA2OSAwIFIgNzAgMCBSIDcxIDAgUiA3MiAwIFIgNzQgMCBSIDc4IDAgUiA3OSAwIFIgODAgMCBSXT4+DWVuZG9iag0yMDIgMCBvYmoNPDwvRGlmZmVyZW5jZXNbMjQvYnJldmUvY2Fyb24vY2lyY3VtZmxleC9kb3RhY2NlbnQvaHVuZ2FydW1sYXV0L29nb25lay9yaW5nL3RpbGRlIDM5L3F1b3Rlc2luZ2xlIDk2L2dyYXZlIDEyOC9idWxsZXQvZGFnZ2VyL2RhZ2dlcmRibC9lbGxpcHNpcy9lbWRhc2gvZW5kYXNoL2Zsb3Jpbi9mcmFjdGlvbi9ndWlsc2luZ2xsZWZ0L2d1aWxzaW5nbHJpZ2h0L21pbnVzL3BlcnRob3VzYW5kL3F1b3RlZGJsYmFzZS9xdW90ZWRibGxlZnQvcXVvdGVkYmxyaWdodC9xdW90ZWxlZnQvcXVvdGVyaWdodC9xdW90ZXNpbmdsYmFzZS90cmFkZW1hcmsvZmkvZmwvTHNsYXNoL09FL1NjYXJvbi9ZZGllcmVzaXMvWmNhcm9uL2RvdGxlc3NpL2xzbGFzaC9vZS9zY2Fyb24vemNhcm9uIDE2MC9FdXJvIDE2NC9jdXJyZW5jeSAxNjYvYnJva2VuYmFyIDE2OC9kaWVyZXNpcy9jb3B5cmlnaHQvb3JkZmVtaW5pbmUgMTcyL2xvZ2ljYWxub3QvLm5vdGRlZi9yZWdpc3RlcmVkL21hY3Jvbi9kZWdyZWUvcGx1c21pbnVzL3R3b3N1cGVyaW9yL3RocmVlc3VwZXJpb3IvYWN1dGUvbXUgMTgzL3BlcmlvZGNlbnRlcmVkL2NlZGlsbGEvb25lc3VwZXJpb3Ivb3JkbWFzY3VsaW5lIDE4OC9vbmVxdWFydGVyL29uZWhhbGYvdGhyZWVxdWFydGVycyAxOTIvQWdyYXZlL0FhY3V0ZS9BY2lyY3VtZmxleC9BdGlsZGUvQWRpZXJlc2lzL0FyaW5nL0FFL0NjZWRpbGxhL0VncmF2ZS9FYWN1dGUvRWNpcmN1bWZsZXgvRWRpZXJlc2lzL0lncmF2ZS9JYWN1dGUvSWNpcmN1bWZsZXgvSWRpZXJlc2lzL0V0aC9OdGlsZGUvT2dyYXZlL09hY3V0ZS9PY2lyY3VtZmxleC9PdGlsZGUvT2RpZXJlc2lzL211bHRpcGx5L09zbGFzaC9VZ3JhdmUvVWFjdXRlL1VjaXJjdW1mbGV4L1VkaWVyZXNpcy9ZYWN1dGUvVGhvcm4vZ2VybWFuZGJscy9hZ3JhdmUvYWFjdXRlL2FjaXJjdW1mbGV4L2F0aWxkZS9hZGllcmVzaXMvYXJpbmcvYWUvY2NlZGlsbGEvZWdyYXZlL2VhY3V0ZS9lY2lyY3VtZmxleC9lZGllcmVzaXMvaWdyYXZlL2lhY3V0ZS9pY2lyY3VtZmxleC9pZGllcmVzaXMvZXRoL250aWxkZS9vZ3JhdmUvb2FjdXRlL29jaXJjdW1mbGV4L290aWxkZS9vZGllcmVzaXMvZGl2aWRlL29zbGFzaC91Z3JhdmUvdWFjdXRlL3VjaXJjdW1mbGV4L3VkaWVyZXNpcy95YWN1dGUvdGhvcm4veWRpZXJlc2lzXS9UeXBlL0VuY29kaW5nPj4NZW5kb2JqDTIwMyAwIG9iag08PC9BdXRob3IoVXNlcikvQ3JlYXRpb25EYXRlKEQ6MjAyMzAxMTAyMTE4NTktMDYnMDAnKS9DcmVhdG9yKFBTY3JpcHQ1LmRsbCBWZXJzaW9uIDUuMi4yKS9Nb2REYXRlKEQ6MjAyMzAxMTEyMzAzNTYtMDYnMDAnKS9Qcm9kdWNlcihBY3JvYmF0IERpc3RpbGxlciA5LjAuMCBcKFdpbmRvd3NcKSkvVGl0bGUoTWljcm9zb2Z0IFdvcmQgLSBuYW1lLWkucnRmKT4+DWVuZG9iag0yMTAgMCBvYmoNPDwvRGVjb2RlUGFybXM8PC9Db2x1bW5zIDQvUHJlZGljdG9yIDEyPj4vRmlsdGVyL0ZsYXRlRGVjb2RlL0lEWzxDMDJDREFFNzZFMzVDN0I0RkVFQUUwNDREM0U2QUE0Mz48MzMxOEE2MTlEMUE0ODU0OEEzMTJCMzNENENFOEVBRkE+XS9JbmZvIDIwMyAwIFIvTGVuZ3RoIDU2OC9Sb290IDExIDAgUi9TaXplIDIxMS9UeXBlL1hSZWYvV1sxIDIgMV0+PnN0cmVhbQ0KaN6sUk1IlFEUfe869mPp5E+lLWqTtIpqyLEWLRqU/gaGsEUxULgQhBhFCYchQXAypAijESFqEQjFBIJFBpLgZkoUFKGC0F2UOfmTY9mfNddzv69veCEIQbM43HPueed7c+8jhR9ZoN3nFHHqwR9qAalRq9IAZkqrg4555wTg7ZKCdgDVrkY0svYBqEpAAly5opUJBAU8iB89IqFjmdDVkFaeZVjG17D8E7D31CLpkT63Qx8tgAby/7IUzEGbL1p1tjyUJD0cK0Y1Po1qf8l/uFB56QSiJves5dOvpWIZ+17iQ50vSekXGIl+I3PJVLb2PKNZMJmpEtjMYF82sa95GXRYNB+0gcg64sr+n6AjolVA6z+cQ3w8/RXLOyF52JF+OkPE/kAaFr/4ZqE9jmQRBzy/sd84aE/pBuIzed9xrEKOIU8/fOcmPhtI2dRq6PvdLuJg+BdS5EnpSmjd4Y3E5we+mde4511PXO36YX9NEb6r7ybyiGvqF03f7egW4treBZtaDd3l20R8MbVk+mI6l7hu92dEnRRN/lZHYjNxY/0X46zS8p6vx/OJm0KfQI85oe2tBcSRznlTawsWEjcPzYGeFg2PVbcWFxG3uGbtO9uDaJnaShz1zjjzE+3yk23EV2s/GprSQ2iEn+GZXbswDXrUMV/qKiG+ceWDqTU07CC+GZ8ytTr/duLYWNLQrFDrakrdkeq9wCuBGkA2lqeqQ9LtEK1dhh2VKgnIaQLciqgVAQYAWiHEyg0KZW5kc3RyZWFtDWVuZG9iag1zdGFydHhyZWYNCjQxMDkwDQolJUVPRg0K";
+
+function base64ToArrayBuffer(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+const nameTypeFieldset = document.getElementById('nameTypeFieldset');
+const actionTypeFieldset = document.getElementById('actionTypeFieldset');
+const nameSubmittedWrap = document.getElementById('nameSubmittedWrap');
+const whatDoingWrap = document.getElementById('whatDoingWrap');
+const preferenceDetailWrap = document.getElementById('preferenceDetailWrap');
+const authenticQuestionsWrap = document.getElementById('authenticQuestionsWrap');
+const holdingNamePreferenceWrap = document.getElementById('holdingNamePreferenceWrap');
+const acceptFollowingWrap = document.getElementById('acceptFollowingWrap');
+
+let streamlinedSubmission = null;
+
+function wireToggle(radioName, mapping) {
+  // mapping: { elementId: triggerValue | [triggerValue, ...] }
+  const inputs = document.querySelectorAll(`input[name="${radioName}"]`);
+  const update = () => {
+    const checked = document.querySelector(`input[name="${radioName}"]:checked`)?.value;
+    Object.entries(mapping).forEach(([elId, values]) => {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      const list = Array.isArray(values) ? values : [values];
+      el.hidden = !list.includes(checked);
+    });
+  };
+  inputs.forEach(r => r.addEventListener('change', update));
+}
+
+function setRadioValue(name, value) {
+  const input = document.querySelector(`input[name="${name}"][value="${CSS.escape(value)}"]`);
+  if (input) input.checked = true;
+}
+
+function clearRadioGroup(name) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(input => { input.checked = false; });
+}
+
+function setNameAndAction(nameType, actionType) {
+  streamlinedSubmission = { nameType, actionType };
+  setRadioValue('nameType', nameType);
+  setRadioValue('actionType', actionType);
+}
+
+function updateSubmissionPath() {
+  const first = document.querySelector('input[name="firstSubmission"]:checked')?.value;
+  const streamlined = document.querySelector('input[name="streamlinedAction"]:checked')?.value;
+
+  whatDoingWrap.hidden = first !== 'no';
+
+  if (first === 'yes') {
+    setNameAndAction('Primary', 'New');
+    nameTypeFieldset.hidden = true;
+    actionTypeFieldset.hidden = true;
+  } else if (first === 'no' && streamlined === 'alternateNew') {
+    setNameAndAction('Alternate', 'New');
+    nameTypeFieldset.hidden = true;
+    actionTypeFieldset.hidden = true;
+  } else if (first === 'no' && streamlined === 'householdNew') {
+    setNameAndAction('Household', 'New');
+    nameTypeFieldset.hidden = true;
+    actionTypeFieldset.hidden = true;
+  } else if (first === 'no' && (streamlined === 'fullQuestions' || streamlined === 'other')) {
+    streamlinedSubmission = null;
+    nameTypeFieldset.hidden = false;
+    actionTypeFieldset.hidden = false;
+  } else {
+    streamlinedSubmission = null;
+    nameTypeFieldset.hidden = true;
+    actionTypeFieldset.hidden = true;
+  }
+
+  updateNameSubmittedVisibility();
+  updateDocumentationMode();
+}
+
+function updateNameSubmittedVisibility() {
+  const selected = streamlinedSubmission?.nameType ||
+    document.querySelector('input[name="nameType"]:checked')?.value;
+  nameSubmittedWrap.hidden = !['Alternate', 'Household', 'Other'].includes(selected);
+}
+
+document.querySelectorAll('input[name="firstSubmission"], input[name="streamlinedAction"]')
+  .forEach(input => input.addEventListener('change', updateSubmissionPath));
+
+wireToggle('nameType', { nameTypeOtherWrap: 'Other' });
+wireToggle('actionType', {
+  resubWrap: 'Resubmission',
+  changeWrap: 'ChangeIfRegistered',
+  actionOtherWrap: 'Other',
+  previousSubmissionWrap: ['Resubmission', 'ChangeOfHoldingName', 'Appeal', 'Other'],
+  appealDetailsWrap: 'Appeal',
+  changeDetailsWrap: 'ChangeIfRegistered'
+});
+
+document.querySelectorAll('input[name="nameType"]').forEach(r => r.addEventListener('change', updateNameSubmittedVisibility));
+
+document.querySelectorAll('input[name="pref"]').forEach(r => r.addEventListener('change', () => {
+  const pref = document.querySelector('input[name="pref"]:checked')?.value;
+
+  authenticQuestionsWrap.hidden = pref !== 'authentic';
+  acceptFollowingWrap.hidden = pref !== 'acceptFollowing';
+  holdingNamePreferenceWrap.hidden = pref !== 'notAccept';
+  preferenceDetailWrap.hidden = !['necessary', 'authentic', 'acceptFollowing'].includes(pref);
+
+  if (pref !== 'authentic') {
+    document.getElementById('authenticCentury').value = '';
+    document.getElementById('authenticCulture').value = '';
+  }
+  if (pref !== 'acceptFollowing') {
+    document.getElementById('acceptFollowingText').value = '';
+  }
+  if (pref !== 'notAccept') {
+    document.getElementById('noHoldingNamePreference').checked = false;
+  }
+}));
+
+// --- Name Documentation auto-generation ---
+
+const SENA_A_LINK = '<a href="https://heraldry.sca.org/sena.html#AppendixA" target="_blank" rel="noopener">SENA Appendix A</a>';
+const SENA_C_LINK = '<a href="https://heraldry.sca.org/sena.html#AppendixC" target="_blank" rel="noopener">SENA Appendix C</a>';
+const MONTH_NAMES = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function bynameKindPhrase(bynType) {
+  if (!bynType) return 'byname';
+  if (bynType.toLowerCase() === 'family surname') return 'family surname';
+  return `${bynType.toLowerCase()} byname`;
+}
+function bynameTypePluralPhrase(bynType) {
+  if (bynType.toLowerCase() === 'family surname') return 'Family surnames';
+  return `${capitalize(bynType)} bynames`;
+}
+function articleFor(word) { return word && /^[aeiou]/i.test(word) ? 'an' : 'a'; }
+function monthName(m) { return MONTH_NAMES[parseInt(m, 10)] || ''; }
+
+const SCA_FOUNDING_YEAR = 1966;
+
+// Expands a 2-digit year the way people naturally mean it for an org founded in 1966:
+// "26" -> 2026, "99" -> 1999. Anything else is returned as-is for validation to catch.
+function normalizeLoarYear(rawValue) {
+  const trimmed = String(rawValue).trim();
+  if (/^\d{4}$/.test(trimmed)) return trimmed;
+  if (/^\d{1,2}$/.test(trimmed)) {
+    const currentYY = new Date().getFullYear() % 100;
+    const n = parseInt(trimmed, 10);
+    return String((n <= currentYY ? 2000 : 1900) + n);
+  }
+  return trimmed;
+}
+
+function loarYearWarning(rawValue) {
+  const trimmed = String(rawValue).trim();
+  if (!trimmed) return '';
+  const currentYear = new Date().getFullYear();
+  const normalized = normalizeLoarYear(trimmed);
+  if (!/^\d{4}$/.test(normalized)) {
+    return `"${trimmed}" doesn't look like a year — try a 4-digit year, or a 2-digit year like "26" for ${currentYear}.`;
+  }
+  const y = parseInt(normalized, 10);
+  if (y < SCA_FOUNDING_YEAR || y > currentYear) {
+    return `${y} is outside the years the SCA has existed (${SCA_FOUNDING_YEAR}–${currentYear}) — please double check this is right.`;
+  }
+  return '';
+}
+
+function buildLoarUrl(year, month) {
+  if (!year || !month) return '';
+  const y = normalizeLoarYear(year);
+  if (!/^\d{4}$/.test(y)) return '';
+  const yy = y.slice(-2);
+  const mm = String(month).padStart(2, '0');
+  return `https://heraldry.sca.org/loar/${y}/${mm}/${yy}-${mm}lar.html`;
+}
+
+function wireLoarLink(monthSelId, yearInputId, linkWrapId) {
+  const monthSel = document.getElementById(monthSelId);
+  const yearInput = document.getElementById(yearInputId);
+  const linkWrap = document.getElementById(linkWrapId);
+  const yearWarnEl = yearInput.parentElement.querySelector('.year-warning');
+  function update() {
+    const rawYear = yearInput.value.trim();
+    const warning = loarYearWarning(rawYear);
+    if (yearWarnEl) {
+      yearWarnEl.hidden = !warning;
+      yearWarnEl.textContent = warning;
+    }
+    const url = buildLoarUrl(rawYear, monthSel.value);
+    if (url) {
+      const label = `${monthName(monthSel.value)} ${normalizeLoarYear(rawYear)}`;
+      linkWrap.innerHTML = `<a href="${url}" target="_blank" rel="noopener">Open the ${label} LOAR</a> — double check your name is on it, so we know this link is right.`;
+    } else {
+      linkWrap.innerHTML = '';
+    }
+  }
+  monthSel.addEventListener('change', update);
+  yearInput.addEventListener('input', update);
+  update();
+}
+wireLoarLink('returnedMonth', 'returnedYear', 'returnedLoarLinkWrap');
+wireLoarLink('changeAcceptedMonth', 'changeAcceptedYear', 'changeLoarLinkWrap');
+
+// Y2K-proofing: this tool assumes the SCA is under 100 years old when expanding 2-digit
+// years. If it's still running in 2066+, that assumption needs revisiting — flag it loudly
+// rather than silently misbehaving the way Y2K-era software did.
+function checkToolAgeAssumptions() {
+  const currentYear = new Date().getFullYear();
+  if (currentYear >= 2066) {
+    const banner = document.createElement('p');
+    banner.style.cssText = 'color:#a00; font-weight:bold; border:1px solid #a00; padding:8px 10px; border-radius:4px; margin:10px 0;';
+    banner.textContent = `Maintenance flag: it's ${currentYear}, and this form's 2-digit-year handling assumes the SCA is under 100 years old (founded ${SCA_FOUNDING_YEAR}). That logic needs updating.`;
+    document.querySelector('.intro').insertAdjacentElement('afterend', banner);
+  }
+}
+checkToolAgeAssumptions();
+
+// Best-effort auto-fill of title/author from a pasted source URL. Many sites block
+// cross-origin fetches like this (CORS), so this quietly does nothing but leave a note
+// if it fails — it never blocks manual entry, and never overwrites a field the user
+// already filled in themselves.
+function extractSourceSuggestion(doc) {
+  const title = doc.querySelector('title')?.textContent.trim() || '';
+  let author = '';
+  const candidates = doc.querySelectorAll('h1,h2,h3,h4,h5,h6,p,em,i,strong,span,div');
+  for (const el of candidates) {
+    const text = el.textContent.trim().replace(/\s+/g, ' ');
+    const m = text.match(/^by\s+(.{2,120})$/i);
+    if (m) { author = m[1].trim(); break; }
+  }
+  if (/known in the sca as/i.test(author) && !/,\s*known in the sca as/i.test(author)) {
+    author = author.replace(/\s*known in the sca as/i, ', known in the SCA as');
+  }
+  return { title, author };
+}
+
+async function tryAutofillSource(block) {
+  const urlInput = block.querySelector('.f-url');
+  const titleInput = block.querySelector('.f-title');
+  const authorInput = block.querySelector('.f-author');
+  const hint = block.querySelector('.source-fetch-hint');
+  const url = urlInput.value.trim();
+  hint.hidden = true;
+  if (!url || !/^https?:\/\//i.test(url)) return;
+  if (titleInput.value.trim() && authorInput.value.trim()) return;
+  hint.hidden = false;
+  hint.textContent = 'Looking up the title/author from this link…';
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('request failed');
+    const text = await res.text();
+    const doc = new DOMParser().parseFromString(text, 'text/html');
+    const { title, author } = extractSourceSuggestion(doc);
+    let filled = false;
+    if (title && !titleInput.value.trim()) { titleInput.value = title; filled = true; }
+    if (author && !authorInput.value.trim()) { authorInput.value = author; filled = true; }
+    hint.textContent = filled
+      ? 'Title/author suggested from this link — please double check they\'re right.'
+      : 'Couldn\'t find a title/author on this page — please fill them in manually.';
+    regenerateDocNotes();
+  } catch (e) {
+    hint.textContent = "Couldn't auto-fetch this link (many sites block this) — please fill in title/author manually.";
+  }
+}
+
+// The O&A search CGI expects classic Latin-1 percent-encoding with '+' for spaces
+// (e.g. "Forannán Glórach" -> "Forann%E1n+Gl%F3rach"), not the UTF-8 percent-encoding
+// encodeURIComponent produces. Verified directly against real O&A search URLs.
+function oandaEncode(name) {
+  let out = '';
+  for (const ch of name) {
+    if (ch === ' ') { out += '+'; continue; }
+    if (/[A-Za-z0-9\-_.~]/.test(ch)) { out += ch; continue; }
+    const code = ch.codePointAt(0);
+    out += code <= 0xFF ? '%' + code.toString(16).toUpperCase().padStart(2, '0') : encodeURIComponent(ch);
+  }
+  return out;
+}
+function oandaSearchUrl(name) {
+  return `https://oanda.sca.org//oanda_name.cgi?p=${oandaEncode(name.trim())}`;
+}
+function wireOandaSearchHint(inputId) {
+  const input = document.getElementById(inputId);
+  const hint = input.parentElement.querySelector('.oanda-hint');
+  function update() {
+    const name = input.value.trim();
+    if (!name) { hint.innerHTML = ''; return; }
+    const url = oandaSearchUrl(name);
+    hint.innerHTML = `Not sure this is actually registered? <a href="${url}" target="_blank" rel="noopener">Search the Ordinary &amp; Armorial for "${name}"</a> to check.`;
+  }
+  input.addEventListener('input', update);
+  update();
+  return update;
+}
+wireOandaSearchHint('changePreviousName');
+const updateSocietyNameOandaHint = wireOandaSearchHint('societyName');
+
+function readFields(blockEl) {
+  const get = cls => blockEl.querySelector(`.${cls}`)?.value.trim() || '';
+  return {
+    name: get('f-name'), gender: get('f-gender'), culture: get('f-culture'),
+    date: get('f-date'), title: get('f-title'), author: get('f-author'), url: get('f-url')
+  };
+}
+
+function nameSentence(kind, data) {
+  if (!data.name) return '';
+  const descriptor = [data.gender, data.culture].filter(Boolean).join(' ');
+  const article = articleFor(descriptor || kind);
+  let s = `${data.name} is ${article}`;
+  if (descriptor) s += ` ${descriptor}`;
+  s += ` ${kind}`;
+  if (data.date) s += ` dated to ${data.date}`;
+  let titleAuthor = '';
+  if (data.title) titleAuthor += `"${data.title}"`;
+  if (data.author) titleAuthor += `${titleAuthor ? ' ' : ''}by ${data.author}`;
+  const sourceBits = [];
+  if (titleAuthor) sourceBits.push(titleAuthor);
+  if (data.url) sourceBits.push(data.url);
+  if (sourceBits.length) s += ` in the source ${sourceBits.join(', ')}`;
+  return s + '.';
+}
+
+function buildAppealSentence() {
+  const name = document.getElementById('prevSubmitted').value.trim();
+  if (!name) return '';
+  const reason = document.getElementById('appealRejectionReason').value.trim();
+  const month = document.getElementById('returnedMonth').value;
+  const year = normalizeLoarYear(document.getElementById('returnedYear').value.trim());
+  const basis = document.getElementById('appealBasis').value.trim();
+  const monthYear = (month && year) ? `${monthName(month)} ${year}` : '';
+  let s = `Previous submission of ${name} rejected`;
+  if (monthYear) s += ` on the ${monthYear} LOAR`;
+  if (reason) s += ` for ${reason}`;
+  s += '.';
+  const link = buildLoarUrl(year, month);
+  if (link) s += ` ${link}`;
+  if (basis) s += ` We are filing an appeal on the basis of: ${basis}`;
+  return s;
+}
+
+function buildChangeSentence() {
+  const name = document.getElementById('changePreviousName').value.trim();
+  if (!name) return '';
+  const month = document.getElementById('changeAcceptedMonth').value;
+  const year = normalizeLoarYear(document.getElementById('changeAcceptedYear').value.trim());
+  const monthYear = (month && year) ? `${monthName(month)} ${year}` : '';
+  let s = `Previous name of ${name} was accepted`;
+  if (monthYear) s += ` on the ${monthYear} LOAR`;
+  s += '.';
+  const link = buildLoarUrl(year, month);
+  if (link) s += ` ${link}`;
+  return s;
+}
+
+function buildAppealOrChangeSentence() {
+  const actionType = getEffectiveActionType();
+  if (actionType === 'Appeal') return buildAppealSentence();
+  if (actionType === 'ChangeIfRegistered') return buildChangeSentence();
+  return '';
+}
+
+const gn1Block = document.getElementById('gn1Block');
+const gn2Block = document.getElementById('gn2Block');
+const addAnotherGivenName = document.getElementById('addAnotherGivenName');
+const multiGivenNamesWrap = document.getElementById('multiGivenNamesWrap');
+const multiGivenNamesLabel = document.getElementById('multiGivenNamesLabel');
+
+const bynameBlocks = [
+  { id: 'byn1', block: document.getElementById('byn1Block'), senaWrap: document.getElementById('bynameSenaWrap-byn1'), senaLabel: document.getElementById('bynameSenaLabel-byn1') },
+  { id: 'byn2', block: document.getElementById('byn2Block'), senaWrap: document.getElementById('bynameSenaWrap-byn2'), senaLabel: document.getElementById('bynameSenaLabel-byn2') }
+];
+const addAnotherByname = document.getElementById('addAnotherByname');
+
+[gn1Block, gn2Block, bynameBlocks[0].block, bynameBlocks[1].block].forEach(block => {
+  block.querySelector('.f-url').addEventListener('change', () => tryAutofillSource(block));
+});
+
+// Dependent culture blocks, in a fixed priority order: whichever of these first sets
+// a different culture "owns" that alternate culture; later ones get constrained to
+// choosing between the base culture and that one, since SENA only allows mixing two.
+const dependentCultureBlocks = [
+  { key: 'gn2', block: gn2Block },
+  { key: 'byn1', block: bynameBlocks[0].block },
+  { key: 'byn2', block: bynameBlocks[1].block }
+];
+
+addAnotherGivenName.addEventListener('change', () => {
+  gn2Block.hidden = !addAnotherGivenName.checked;
+  multiGivenNamesWrap.hidden = !addAnotherGivenName.checked;
+  if (!addAnotherGivenName.checked) {
+    gn2Block.querySelectorAll('input, select').forEach(el => { if (el.type !== 'checkbox') el.value = ''; else el.checked = false; });
+    document.querySelectorAll('input[name="multiGivenNamesAllowed"]').forEach(r => r.checked = false);
+  }
+});
+
+addAnotherByname.addEventListener('change', () => {
+  const byn2 = bynameBlocks[1];
+  byn2.block.hidden = !addAnotherByname.checked;
+  byn2.senaWrap.hidden = !addAnotherByname.checked;
+  if (!addAnotherByname.checked) {
+    byn2.block.querySelectorAll('input, select').forEach(el => { if (el.type !== 'checkbox') el.value = ''; else el.checked = false; });
+    document.querySelectorAll(`input[name="bynameSenaAllowed-${byn2.id}"]`).forEach(r => r.checked = false);
+  }
+});
+
+function currentBynameType(blockEl) {
+  const select = blockEl.querySelector('.byn-type');
+  const val = select.value;
+  if (!val) return '';
+  return val === 'other' ? blockEl.querySelector('.byn-type-other').value.trim() : val;
+}
+
+bynameBlocks.forEach(({ block }) => {
+  const select = block.querySelector('.byn-type');
+  const otherWrap = block.querySelector('.byn-type-other-wrap');
+  select.addEventListener('change', () => {
+    otherWrap.hidden = select.value !== 'other';
+    if (select.value !== 'other') block.querySelector('.byn-type-other').value = '';
+  });
+});
+
+// Culture lock: gn2 / byn1 / byn2's culture field mirrors gn1's culture unless the
+// user explicitly opts into a different one, in which case we ask about SENA Appendix C.
+// SENA only allows mixing two cultures total, so once a second culture is established by
+// one block, any other block wanting a different culture must pick between those two.
+function wireCultureLock(blockKey, blockEl) {
+  const cultureInput = blockEl.querySelector('.f-culture');
+  const choiceSelect = blockEl.querySelector('.f-culture-choice');
+  const toggle = blockEl.querySelector('.use-different-culture');
+  const mixWrap = document.getElementById(`cultureMixWrap-${blockKey}`);
+  const mixLabel = document.getElementById(`cultureMixLabel-${blockKey}`);
+  const gn1Culture = () => gn1Block.querySelector('.f-culture').value.trim();
+
+  function syncFromGn1() {
+    if (!toggle.checked) {
+      cultureInput.value = gn1Culture();
+      cultureInput.placeholder = gn1Culture() ? '' : "Fill in the given name's culture first";
+    }
+  }
+  function updateMixLabel() {
+    const c1 = gn1Culture() || 'the first given name\'s culture';
+    const c2 = cultureInput.value.trim() || 'this culture';
+    mixLabel.innerHTML = `Is mixing ${c1} and ${c2} allowed as per ${SENA_C_LINK}?`;
+  }
+
+  toggle.addEventListener('change', () => {
+    mixWrap.hidden = !toggle.checked;
+    if (!toggle.checked) {
+      choiceSelect.hidden = true;
+      syncFromGn1();
+      document.querySelectorAll(`input[name="cultureMixAllowed-${blockKey}"]`).forEach(r => r.checked = false);
+    }
+    updateMixLabel();
+    updateCultureConstraints();
+  });
+  cultureInput.addEventListener('input', updateMixLabel);
+  choiceSelect.addEventListener('change', () => {
+    cultureInput.value = choiceSelect.value;
+    updateMixLabel();
+  });
+  gn1Block.querySelector('.f-culture').addEventListener('input', () => { syncFromGn1(); updateMixLabel(); updateCultureConstraints(); });
+
+  syncFromGn1();
+  updateMixLabel();
+}
+dependentCultureBlocks.forEach(({ key, block }) => wireCultureLock(key, block));
+
+// Enforce "at most 2 cultures total": whichever dependent block first sets a distinct
+// alternate culture defines it freely; any other block wanting to differ from the base
+// culture must then choose between the base culture and that established alternate.
+function updateCultureConstraints() {
+  const cultureA = gn1Block.querySelector('.f-culture').value.trim();
+  let cultureB = '';
+  let definingKey = '';
+  for (const { key, block } of dependentCultureBlocks) {
+    const toggle = block.querySelector('.use-different-culture');
+    const input = block.querySelector('.f-culture');
+    if (toggle.checked && input.value.trim() && input.value.trim() !== cultureA) {
+      cultureB = input.value.trim();
+      definingKey = key;
+      break;
+    }
+  }
+
+  dependentCultureBlocks.forEach(({ key, block }) => {
+    const toggle = block.querySelector('.use-different-culture');
+    const input = block.querySelector('.f-culture');
+    const select = block.querySelector('.f-culture-choice');
+    const note = block.querySelector('.culture-constrained-note');
+    if (!toggle.checked || key === definingKey || !cultureB) {
+      select.hidden = true;
+      note.hidden = true;
+      if (toggle.checked) input.readOnly = false;
+      return;
+    }
+    // Constrained: must pick between the base culture and the established alternate.
+    input.readOnly = true;
+    select.hidden = false;
+    select.innerHTML = `<option value="${cultureA}">${cultureA}</option><option value="${cultureB}">${cultureB}</option>`;
+    if (![cultureA, cultureB].includes(input.value.trim())) input.value = cultureB;
+    select.value = input.value.trim();
+    note.hidden = false;
+    note.textContent = `Rules don't permit mixing more than two cultures/languages — choose between ${cultureA} and ${cultureB}.`;
+  });
+}
+
+function cultureMixSentence(blockKey, blockEl) {
+  const toggle = blockEl.querySelector('.use-different-culture');
+  if (!toggle.checked) return '';
+  const gn1Culture = gn1Block.querySelector('.f-culture').value.trim();
+  const thisCulture = blockEl.querySelector('.f-culture').value.trim();
+  const allowed = document.querySelector(`input[name="cultureMixAllowed-${blockKey}"]:checked`)?.value;
+  if (allowed === 'yes' && gn1Culture && thisCulture && thisCulture !== gn1Culture) {
+    return `${gn1Culture} and ${thisCulture} can be mixed as per SENA Appendix C.`;
+  }
+  return '';
+}
+
+function updateDynamicLabels() {
+  const gn1Culture = gn1Block.querySelector('.f-culture').value.trim();
+  multiGivenNamesLabel.innerHTML = gn1Culture
+    ? `Are multiple given names allowed in ${gn1Culture} as per ${SENA_A_LINK}?`
+    : `Are multiple given names allowed in this culture as per ${SENA_A_LINK}?`;
+
+  bynameBlocks.forEach(({ block, senaLabel }) => {
+    const bynType = currentBynameType(block);
+    const bynCulture = block.querySelector('.f-culture').value.trim();
+    const typePhrase = bynType || 'this byname type';
+    const culturePhrase = bynCulture || 'this culture';
+    senaLabel.innerHTML = `Is ${typePhrase} ok in ${culturePhrase} as per ${SENA_A_LINK}?`;
+  });
+}
+
+// --- Date compatibility: SENA requires name elements documented within 500 years of
+// each other, tightening to 300 years when the elements mix two different cultures/
+// languages, with 1650 as the latest allowable date for any of them. A date documented
+// only to a century (rather than an exact year) gets the benefit of the doubt — SCA rules
+// let you treat it as anywhere in that century, so it's flagged incompatible only if its
+// WHOLE range falls outside the window, not just its center point.
+function ordinalSuffix(n) {
+  const j = n % 10, k = n % 100;
+  if (j === 1 && k !== 11) return 'st';
+  if (j === 2 && k !== 12) return 'nd';
+  if (j === 3 && k !== 13) return 'rd';
+  return 'th';
+}
+function formatYear(y) {
+  return y < 0 ? `${-y} BCE` : String(y);
+}
+function normalizeEra(token) {
+  if (!token) return null;
+  const t = token.toLowerCase().replace(/\./g, '');
+  if (t === 'bc' || t === 'bce') return 'BCE';
+  if (t === 'ad' || t === 'ce') return 'CE';
+  return null;
+}
+
+// Returns { lo, hi, label } — a point date has lo === hi. Returns null if unparseable
+// (in which case that field is just quietly skipped, same as leaving it blank).
+function parseHistoricalDate(raw) {
+  if (!raw) return null;
+  let s = raw.trim().replace(/^(circa|c\.?a?\.?)\s*/i, '');
+
+  const centMatch = s.match(/(\d{1,2})(?:st|nd|rd|th)?\s*century\s*(b\.?c\.?e?\.?|a\.?d\.?|c\.?e\.?)?/i);
+  if (centMatch) {
+    const n = parseInt(centMatch[1], 10);
+    const era = normalizeEra(centMatch[2]) || 'CE';
+    if (era === 'BCE') {
+      const lo = -(100 * n), hi = -(100 * (n - 1) + 1);
+      return { lo, hi, label: `${n}${ordinalSuffix(n)} century BCE (${formatYear(hi)}-${formatYear(lo)})` };
+    }
+    const lo = (n - 1) * 100, hi = lo + 99;
+    return { lo, hi, label: `${n}${ordinalSuffix(n)} century (${lo}-${hi})` };
+  }
+
+  const yearMatch = s.match(/(\d{1,4})\s*(b\.?c\.?e?\.?|a\.?d\.?|c\.?e\.?)?/i);
+  if (yearMatch) {
+    let y = parseInt(yearMatch[1], 10);
+    const era = normalizeEra(yearMatch[2]);
+    if (era === 'BCE') y = -y;
+    const label = era ? formatYear(y) + (era === 'CE' ? ' CE' : '') : String(y);
+    return { lo: y, hi: y, label };
+  }
+  return null;
+}
+
+const BLOCK_LABELS = { gn1: 'Given name', gn2: 'Second given name', byn1: 'Byname', byn2: 'Second byname' };
+const DATE_CUTOFF = 1650;
+
+function getBlockByKey(key) {
+  if (key === 'gn1') return gn1Block;
+  if (key === 'gn2') return gn2Block;
+  if (key === 'byn1') return bynameBlocks[0].block;
+  return bynameBlocks[1].block;
+}
+
+function activeDateEntries() {
+  const keys = ['gn1'];
+  if (addAnotherGivenName.checked) keys.push('gn2');
+  keys.push('byn1');
+  if (addAnotherByname.checked) keys.push('byn2');
+  return keys
+    .map(key => {
+      const block = getBlockByKey(key);
+      const dateRaw = block.querySelector('.f-date').value.trim();
+      return {
+        key, block,
+        name: block.querySelector('.f-name').value.trim(),
+        dateRaw,
+        parsed: parseHistoricalDate(dateRaw),
+        culture: block.querySelector('.f-culture').value.trim()
+      };
+    })
+    .filter(e => e.name || e.dateRaw);
+}
+
+function updateDateValidation() {
+  ['gn1', 'gn2', 'byn1', 'byn2'].forEach(key => {
+    const block = getBlockByKey(key);
+    block.querySelector('.f-date').classList.remove('field-error');
+    const msgEl = block.querySelector('.date-warning');
+    msgEl.hidden = true;
+    msgEl.textContent = '';
+    msgEl.className = 'date-warning';
+  });
+
+  if (getEffectiveNameType() === 'Household') return;
+
+  const dated = activeDateEntries().filter(e => e.parsed);
+  if (!dated.length) return;
+
+  dated.forEach(entry => {
+    const msgEl = entry.block.querySelector('.date-warning');
+    const label = BLOCK_LABELS[entry.key];
+    const isRanged = entry.parsed.lo !== entry.parsed.hi;
+    const others = dated.filter(e => e !== entry);
+
+    // With no other dated element yet, show the generic (same-culture, 500yr) window as
+    // an FYI. With others present, compute the real window from their actual date(s)/culture(s).
+    let lo, hi, otherDesc;
+    if (others.length) {
+      lo = -Infinity; hi = Infinity;
+      others.forEach(other => {
+        const threshold = (entry.culture && other.culture && entry.culture !== other.culture) ? 300 : 500;
+        lo = Math.max(lo, other.parsed.lo - threshold);
+        hi = Math.min(hi, other.parsed.hi + threshold);
+      });
+      otherDesc = others.length === 1
+        ? `a ${BLOCK_LABELS[others[0].key].toLowerCase()} dated ${others[0].parsed.label}`
+        : 'the other name elements';
+    } else {
+      lo = entry.parsed.lo - 500;
+      hi = entry.parsed.hi + 500;
+      otherDesc = 'another name element';
+    }
+    hi = Math.min(hi, DATE_CUTOFF);
+
+    const compatible = entry.parsed.hi >= lo && entry.parsed.lo <= hi;
+    const range = `${formatYear(lo)}-${formatYear(hi)}`;
+
+    if (others.length && !compatible) {
+      entry.block.querySelector('.f-date').classList.add('field-error');
+      msgEl.hidden = false;
+      msgEl.className = 'date-warning date-error';
+      msgEl.textContent = `${label} must be dated within ${range} for compatibility with ${otherDesc}.`;
+    } else if (isRanged) {
+      msgEl.hidden = false;
+      msgEl.className = 'date-warning date-info';
+      const rangeSuffix = others.length ? '' : ` dated ${range}`;
+      msgEl.textContent = `Documented only to ${entry.parsed.label} — SCA rules let you treat this as dated anywhere in that range, making it compatible with ${otherDesc}${rangeSuffix}.`;
+    }
+  });
+}
+
+function getEffectiveNameType() {
+  return streamlinedSubmission?.nameType || document.querySelector('input[name="nameType"]:checked')?.value;
+}
+function getEffectiveActionType() {
+  return streamlinedSubmission?.actionType || document.querySelector('input[name="actionType"]:checked')?.value;
+}
+
+const householdDocsWrap = document.getElementById('householdDocsWrap');
+const structuredDocsWrap = document.getElementById('structuredDocsWrap');
+const extraNotesWrap = document.getElementById('extraNotesWrap');
+const docNotesEl = document.getElementById('docNotes');
+const societyNameWrap = document.getElementById('societyNameWrap');
+const societyNameInput = document.getElementById('societyName');
+
+function updateDocumentationMode() {
+  const isHousehold = getEffectiveNameType() === 'Household';
+  householdDocsWrap.hidden = !isHousehold;
+  structuredDocsWrap.hidden = isHousehold;
+  extraNotesWrap.hidden = isHousehold;
+  regenerateDocNotes();
+}
+
+// The Society Name field (the submitter's primary/current SCA name) is only meaningful
+// when it differs from the name being submitted — i.e. Alternate, Household, or Other.
+// For a Primary submission it's the same name, so we build it from given name + byname(s)
+// instead of asking twice.
+function updateSocietyNameMode() {
+  const nameType = getEffectiveNameType();
+  const isPrimary = nameType === 'Primary';
+  societyNameWrap.hidden = isPrimary || !nameType;
+  if (isPrimary) {
+    const parts = [];
+    const gn1name = gn1Block.querySelector('.f-name').value.trim();
+    if (gn1name) parts.push(gn1name);
+    if (addAnotherGivenName.checked) {
+      const gn2name = gn2Block.querySelector('.f-name').value.trim();
+      if (gn2name) parts.push(gn2name);
+    }
+    const byn1name = bynameBlocks[0].block.querySelector('.f-name').value.trim();
+    if (byn1name) parts.push(byn1name);
+    if (addAnotherByname.checked) {
+      const byn2name = bynameBlocks[1].block.querySelector('.f-name').value.trim();
+      if (byn2name) parts.push(byn2name);
+    }
+    societyNameInput.value = parts.join(' ');
+  }
+  updateSocietyNameOandaHint();
+}
+
+function updateSubmittedNameConfirm() {
+  const name = societyNameInput.value.trim();
+  const wrap = document.getElementById('submittedNameConfirmWrap');
+  wrap.hidden = !name;
+  document.getElementById('submittedNameText').textContent = name;
+}
+
+function regenerateDocNotes() {
+  updateDynamicLabels();
+  updateDateValidation();
+  updateSocietyNameMode();
+  const paragraphs = [];
+
+  // Appeal/Change context applies regardless of name type, including Household.
+  const contextSentence = buildAppealOrChangeSentence();
+  if (contextSentence) paragraphs.push(contextSentence);
+
+  if (getEffectiveNameType() === 'Household') {
+    const householdText = document.getElementById('householdNotes').value.trim();
+    if (householdText) paragraphs.push(householdText);
+    docNotesEl.value = paragraphs.join('\n\n');
+    updateSubmittedNameConfirm();
+    return;
+  }
+
+  const givenNameSentences = [];
+  const gn1 = readFields(gn1Block);
+  const gn1Sentence = nameSentence('given name', gn1);
+  if (gn1Sentence) givenNameSentences.push(gn1Sentence);
+
+  if (addAnotherGivenName.checked) {
+    const gn2 = readFields(gn2Block);
+    const gn2Sentence = nameSentence('given name', gn2);
+    if (gn2Sentence) givenNameSentences.push(gn2Sentence);
+
+    const multiAllowed = document.querySelector('input[name="multiGivenNamesAllowed"]:checked')?.value;
+    if (multiAllowed === 'yes' && gn1.culture) {
+      givenNameSentences.push(`Multiple given names are allowed in ${gn1.culture} per SENA Appendix A.`);
+    }
+    const mix = cultureMixSentence('gn2', gn2Block);
+    if (mix) givenNameSentences.push(mix);
+  }
+  if (givenNameSentences.length) paragraphs.push(givenNameSentences.join(' '));
+
+  const bynameSentences = [];
+  bynameBlocks.forEach(({ id, block }) => {
+    if (id === 'byn2' && !addAnotherByname.checked) return;
+    const byn = readFields(block);
+    const bynType = currentBynameType(block);
+    const bynKind = bynameKindPhrase(bynType);
+    const bynSentence = nameSentence(bynKind, byn);
+    if (bynSentence) bynameSentences.push(bynSentence);
+
+    const senaAllowed = document.querySelector(`input[name="bynameSenaAllowed-${id}"]:checked`)?.value;
+    if (byn.name && bynType && byn.culture && senaAllowed === 'yes') {
+      bynameSentences.push(`${bynameTypePluralPhrase(bynType)} are allowed in ${byn.culture} per SENA Appendix A.`);
+    }
+    const mix = cultureMixSentence(id, block);
+    if (mix) bynameSentences.push(mix);
+  });
+  if (bynameSentences.length) paragraphs.push(bynameSentences.join(' '));
+
+  const extra = document.getElementById('extraNotes').value.trim();
+  if (extra) paragraphs.push(extra);
+
+  docNotesEl.value = paragraphs.join('\n\n');
+  updateSubmittedNameConfirm();
+}
+
+document.getElementById('nameForm').addEventListener('input', regenerateDocNotes);
+document.getElementById('nameForm').addEventListener('change', regenerateDocNotes);
+document.querySelectorAll('input[name="nameType"]').forEach(r => r.addEventListener('change', updateDocumentationMode));
+regenerateDocNotes();
+updateDocumentationMode();
+
+// Default "Date Submitted" to today, formatted MM/DD/YYYY.
+function fillTodaysDate() {
+  const today = new Date();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  document.getElementById('dateSubmitted').value = `${mm}/${dd}/${today.getFullYear()}`;
+}
+fillTodaysDate();
+
+const statusEl = document.getElementById('status');
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (!confirm('Reset the whole form? Everything you\'ve entered will be cleared.')) return;
+  document.getElementById('nameForm').reset();
+  document.querySelectorAll('.sub-choice').forEach(el => el.hidden = true);
+  document.getElementById('previousSubmissionWrap').hidden = true;
+  nameTypeFieldset.hidden = true;
+  actionTypeFieldset.hidden = true;
+  nameSubmittedWrap.hidden = true;
+  authenticQuestionsWrap.hidden = true;
+  holdingNamePreferenceWrap.hidden = true;
+  acceptFollowingWrap.hidden = true;
+  preferenceDetailWrap.hidden = true;
+  gn2Block.hidden = true;
+  multiGivenNamesWrap.hidden = true;
+  bynameBlocks[1].block.hidden = true;
+  bynameBlocks[1].senaWrap.hidden = true;
+  document.querySelectorAll('.byn-type-other-wrap').forEach(el => el.hidden = true);
+  document.querySelectorAll('.culture-mix-wrap').forEach(el => el.hidden = true);
+  document.querySelectorAll('.use-different-culture').forEach(el => el.checked = false);
+  document.querySelectorAll('.f-culture-choice').forEach(el => el.hidden = true);
+  document.querySelectorAll('.culture-constrained-note').forEach(el => el.hidden = true);
+  document.querySelectorAll('.date-warning').forEach(el => { el.hidden = true; el.textContent = ''; el.className = 'date-warning'; });
+  document.querySelectorAll('.f-date').forEach(el => el.classList.remove('field-error'));
+  document.querySelectorAll('.source-fetch-hint').forEach(el => { el.hidden = true; el.textContent = ''; });
+  document.getElementById('returnedLoarLinkWrap').innerHTML = '';
+  document.getElementById('changeLoarLinkWrap').innerHTML = '';
+  [gn2Block, ...bynameBlocks.map(b => b.block)].forEach(block => {
+    const cultureInput = block.querySelector('.f-culture');
+    cultureInput.readOnly = true;
+    cultureInput.value = '';
+  });
+  streamlinedSubmission = null;
+  updateDocumentationMode();
+  fillTodaysDate();
+  statusEl.textContent = '';
+  statusEl.className = 'status';
+  debouncedUpdatePreview();
+});
+
+async function buildFilledPdfBytes({ flatten }) {
+  const bytes = base64ToArrayBuffer(PDF_BASE64);
+  const pdfDoc = await PDFLib.PDFDocument.load(bytes);
+  const form = pdfDoc.getForm();
+
+  const setText = (fieldName, value, fontSize) => {
+    if (!value) return;
+    try {
+      const field = form.getTextField(fieldName);
+      if (fontSize) field.setFontSize(fontSize);
+      field.setText(value);
+    }
+    catch (e) { console.warn('text field missing', fieldName, e); }
+  };
+  const setRadio = (fieldName, value) => {
+    if (!value) return;
+    try { form.getRadioGroup(fieldName).select(value); }
+    catch (e) { console.warn('radio group issue', fieldName, value, e); }
+  };
+  const clearRadio = (fieldName) => {
+    try { form.getRadioGroup(fieldName).clear(); }
+    catch (e) { console.warn('radio group clear issue', fieldName, e); }
+  };
+  const setCheck = (fieldName, checked) => {
+    try {
+      const cb = form.getCheckBox(fieldName);
+      checked ? cb.check() : cb.uncheck();
+    } catch (e) { console.warn('checkbox missing', fieldName, e); }
+  };
+
+  regenerateDocNotes();
+
+  const textFieldIds = [
+    'societyName','nameSubmitted','modernName','address1','address2','phone','email',
+    'branchName','dateSubmitted','consultingHerald','heraldContact',
+    'nameTypeOtherText','actionOtherText','prevSubmitted','kingdomFrom',
+    'acceptFollowingText','prioritySpecify','docNotes'
+  ];
+  try { form.getTextField('Name Documentation').acroField.setDefaultAppearance('/Helv 10 Tf 0 g'); }
+  catch (e) { console.warn('could not set DA for Name Documentation', e); }
+
+  textFieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.name) setText(el.name, el.value.trim());
+  });
+
+  const returnedMonth = document.getElementById('returnedMonth').value;
+  const returnedYear = normalizeLoarYear(document.getElementById('returnedYear').value.trim());
+  if (returnedMonth && returnedYear) {
+    setText('Date returned', `${monthName(returnedMonth)} ${returnedYear}`);
+  }
+
+  // Streamlined paths map directly to the same PDF radio selections as the full questions.
+  const selectedNameType = streamlinedSubmission?.nameType ||
+    document.querySelector('input[name="nameType"]:checked')?.value;
+  const selectedActionType = streamlinedSubmission?.actionType ||
+    document.querySelector('input[name="actionType"]:checked')?.value;
+
+  if (selectedNameType) setRadio('Name Type', selectedNameType);
+
+  if (selectedActionType) {
+    if (selectedActionType === 'New' || selectedActionType === 'Resubmission' || selectedActionType === 'Appeal') {
+      setRadio('Action Type', selectedActionType);
+      clearRadio('Action Type 2');
+    } else {
+      const map2 = { ChangeIfRegistered: 'Change if registered', ChangeOfHoldingName: 'Change of Holding Name', Other: 'Other' };
+      setRadio('Action Type 2', map2[selectedActionType]);
+      clearRadio('Action Type');
+    }
+  }
+
+  const resub = document.querySelector('input[name="resub"]:checked');
+  if (resub) setRadio('Resubmission', resub.value);
+  const change = document.querySelector('input[name="change"]:checked');
+  if (change) setRadio('Change', change.value);
+
+  const pref = document.querySelector('input[name="pref"]:checked')?.value || 'necessary';
+
+  // Preference 1: block holding-name creation only when the user explicitly asks for it.
+  setCheck('I will NOT accept any changes to my name even if the name cannot be registered without such changes', pref === 'notAccept');
+  setCheck('I will accept the following changes to my name', pref === 'acceptFollowing');
+
+  // Preference 4: the user's free-text answer fills the PDF's accepted-changes field.
+  if (pref === 'acceptFollowing') {
+    setText('changes I will accept to my name', document.getElementById('acceptFollowingText').value.trim());
+  }
+
+  // Preferences 2/3/4 expose the priority and gender questions; preference 1 leaves them unset.
+  const priority = document.querySelector('input[name="priority"]:checked')?.value || 'none';
+  ['meaning','sound','spelling'].forEach(p => setCheck(p, pref !== 'notAccept' && priority === p));
+  setCheck('language andor culture', pref !== 'notAccept' && priority === 'language');
+
+  const gender = document.querySelector('input[name="gender"]:checked');
+  if (gender && pref !== 'notAccept') setRadio('Desired gender of name', gender.value);
+
+  // Preference 3: concatenate both answers into the PDF's authenticity field.
+  if (pref === 'authentic') {
+    const century = document.getElementById('authenticCentury').value.trim();
+    const culture = document.getElementById('authenticCulture').value.trim();
+    const authenticFor = [century, culture].filter(Boolean).join(' ');
+    setText('OPTIONAL Please CHANGE my name to be authentic for', authenticFor);
+  }
+
+  const noHolding = document.getElementById('noHoldingName');
+  noHolding.checked = pref === 'notAccept' && document.getElementById('noHoldingNamePreference').checked;
+  setCheck(noHolding.name, noHolding.checked);
+
+  if (flatten) form.flatten();
+  return await pdfDoc.save();
+}
+
+function getMissingFieldWarnings() {
+  const missing = [];
+  const nameType = getEffectiveNameType();
+  const actionType = getEffectiveActionType();
+
+  if (!nameType) missing.push('Name Type (Primary / Alternate / Household / Other)');
+  if (!actionType) missing.push('Action Type (New / Resubmission / Change / etc.)');
+
+  if (nameType === 'Household') {
+    if (!document.getElementById('householdNotes').value.trim()) missing.push('Household name documentation notes');
+  } else if (nameType) {
+    if (!gn1Block.querySelector('.f-name').value.trim()) missing.push('Given name');
+  }
+  if (nameType && nameType !== 'Primary' && !societyNameInput.value.trim()) {
+    missing.push('Your primary SCA name');
+  }
+  if (!document.getElementById('modernName').value.trim()) missing.push('Modern Name');
+  if (!document.getElementById('phone').value.trim() && !document.getElementById('email').value.trim()) {
+    missing.push('a way to reach you (phone or email)');
+  }
+  if (document.querySelector('.f-date.field-error')) {
+    missing.push('the date conflict(s) flagged in red above');
+  }
+  return missing;
+}
+
+document.getElementById('generateBtn').addEventListener('click', async () => {
+  const missing = getMissingFieldWarnings();
+  if (missing.length) {
+    const proceed = confirm(
+      "This looks unfinished — you haven't filled in:\n\n" +
+      missing.map(m => `• ${m}`).join('\n') +
+      '\n\nDownload anyway?'
+    );
+    if (!proceed) return;
+  }
+
+  statusEl.className = 'status';
+  statusEl.textContent = 'Filling PDF…';
+  try {
+    const outBytes = await buildFilledPdfBytes({ flatten: true });
+    const blob = new Blob([outBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const societyName = document.getElementById('societyName').value.trim().replace(/[^a-z0-9]+/gi, '_');
+    a.href = url;
+    a.download = (societyName ? `${societyName}_` : '') + 'atlantia_name_submission.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    statusEl.textContent = 'Downloaded.';
+    statusEl.className = 'status ok';
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = 'Something went wrong generating the PDF: ' + err.message;
+    statusEl.className = 'status err';
+  }
+});
+
+// --- Live preview (desktop only) ---
+
+function isDesktop() {
+  return window.matchMedia('(min-width: 900px)').matches;
+}
+
+let previewUrl = null;
+async function updatePreview() {
+  if (!isDesktop()) return;
+  const frame = document.getElementById('previewFrame');
+  const previewStatus = document.getElementById('previewStatus');
+  try {
+    const bytes = await buildFilledPdfBytes({ flatten: true });
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const newUrl = URL.createObjectURL(blob);
+    frame.src = newUrl;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = newUrl;
+    previewStatus.textContent = '';
+  } catch (err) {
+    console.error(err);
+    previewStatus.textContent = 'Preview unavailable: ' + err.message;
+  }
+}
+
+let previewDebounceTimer = null;
+function debouncedUpdatePreview() {
+  if (!isDesktop()) return;
+  clearTimeout(previewDebounceTimer);
+  previewDebounceTimer = setTimeout(updatePreview, 400);
+}
+
+document.getElementById('nameForm').addEventListener('input', debouncedUpdatePreview);
+document.getElementById('nameForm').addEventListener('change', debouncedUpdatePreview);
+window.addEventListener('resize', debouncedUpdatePreview);
+updatePreview();
+
+</script>
+</body>
+</html>
