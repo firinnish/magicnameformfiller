@@ -8,6 +8,7 @@
 .field { margin-bottom: 16px; }
 .field input:not([type="radio"]):not([type="checkbox"]), .field textarea { width: 100%; box-sizing: border-box; }
 .field > p { margin-top: 0; margin-bottom: 0; font-size: 0.85em; font-style: italic; }
+.field > ul.example-list { margin: 2px 0 6px; font-size: 0.85em; font-style: italic; }
 input[readonly] { background: #eee; color: #666; cursor: not-allowed; }
 input.field-error { border-color: #a00; background: #fee; }
 .date-warning { font-size: 0.85em; margin: 4px 0 0; }
@@ -62,7 +63,9 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
   <div class="layout">
   <form id="nameForm">
     <fieldset id="submissionPathFieldset">
-      <legend>Is this your first SCA name submission?</legend>
+      <legend>Submission type</legend>
+      <label>Is this your first SCA name submission?</label>
+      <p>Note: If you put an SCA name on your membership card, that doesn't count as submitting or registering your name. The College of Heralds has its own separate process, and your name is only registered if you spoke to a herald and paid the submission fee.</p>
       <div class="choice-row" id="firstSubmissionChoices">
         <label class="pill"><input type="radio" name="firstSubmission" value="yes"> Yes - I'm trying to register my first and only name</label>
         <label class="pill"><input type="radio" name="firstSubmission" value="no"> No - I'm trying to do something else</label>
@@ -216,6 +219,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
 
 
     <fieldset>
+      <legend>Personal information</legend>
         <div class="field full" id="societyNameWrap" hidden>
           <label for="societyName">Your primary SCA name</label>
           <input type="text" id="societyName" name="Society Name">
@@ -325,75 +329,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
 
 
     <fieldset>
-      <legend>Name Processing Preferences</legend>
-      <p class="field-note">When you submit a name to the College, sometimes they can accept it as-is, sometimes they have to return it to you so you can try again, and sometimes there's a small tweak that can turn an unregisterable name into a registerable one. For example, if you made a small grammar mistake in forming a patronymic, the College can fix your grammar mistake and accept your name. What would you prefer?</p>
-      <div class="choice-row" id="prefChoices">
-        <label class="pill"><input type="radio" name="pref" value="notAccept"> Don't change my name at all. If there's a problem with me, please return it to me so that I can change it myself and resubmit.</label>
-        <label class="pill"><input type="radio" name="pref" value="necessary"> Only change my name if it's necessary, but any necessary changes are fine.</label>
-        <label class="pill"><input type="radio" name="pref" value="authentic"> I'd like help ensuring my name is historically authentic and I actively want the College to change my name to whatever the most authentic version would be.</label>
-        <label class="pill"><input type="radio" name="pref" value="acceptFollowing"> I'm okay with some changes, but not others.</label>
-      </div>
-      <div class="sub-choice" id="acceptFollowingWrap" hidden>
-        <div class="field">
-          <label for="acceptFollowingText">What changes are you OK with?</label>
-          <input type="text" id="acceptFollowingText" name="changes I will accept to my name">
-        </div>
-      </div>
-
-      <div class="sub-choice" id="holdingNamePreferenceWrap" hidden>
-        <div class="field">
-          <label class="pill" style="width:fit-content;">
-            <input type="checkbox" id="noHoldingNamePreference">
-            Tick this box to block the College from creating a holding name - a temporary name that your armory can be filed under, if your armory is accepted but your name isn't. Note that ticking this box means that, if your name is returned, your armory also can't be accepted. 
-          </label>
-        </div>
-      </div>
-
-      <div class="sub-choice" id="authenticQuestionsWrap" hidden>
-        <div class="field">
-          <label for="authenticCentury">What century should your name be documentable to?</label>
-          <input type="text" id="authenticCentury">
-        </div>
-        <div class="field">
-          <label for="authenticCulture">What culture or language do you want your name to be authentic for?</label>
-          <input type="text" id="authenticCulture">
-        </div>
-      </div>
-
-      <div id="preferenceDetailWrap" hidden>
-        <div class="field full inline-text" style="margin-top:16px;">
-          <label>If my name must be changed, I care most about</label>
-        </div>
-        <div class="choice-row" id="priorityChoices">
-          <label class="pill"><input type="radio" name="priority" value="none"> No preference</label>
-          <label class="pill"><input type="radio" name="priority" value="meaning"> Keeping the meaning the same</label>
-          <label class="pill"><input type="radio" name="priority" value="sound"> Keeping the sound the same</label>
-          <label class="pill"><input type="radio" name="priority" value="spelling"> Keeping the spelling the same</label>
-          <label class="pill"><input type="radio" name="priority" value="language"> Keeping the same language and/or culture</label>
-        </div>
-        <div class="field full inline-text">
-<p> Please specify the meaning/sound/spelling/language culture that you want us to preserve. For example: <ul><li>"The name should sound like Katie but the spelling can change to Katy or Catie as necessary"</li><li>"The name should use a spelling with a J in it"</li><li>"the name should be Norse"</li><li>"the name should have a meaning relating to lions or cats"</li><li>"my dad's name was Paul so please keep the patronymic meaning daughter of Paul"</li><br>That way, if the heralds have to change your name, we can keep what is important to you.<br></p>
-          <label for="prioritySpecify">What's important to preserve:</label>
-          <input type="text" id="prioritySpecify" name="Please specify meaning sound spelling or language andor culture desired" placeholder='Meaning/sound/spelling/language/culture that you want'>
-        </div>
-
-        <div class="grid" style="margin-top:16px;">
-          <div class="field">
-            <label>Desired gender of name</label>
-<p>Note: The heralds do not know, or care, what gender <b>you</b> are. We only need to know what gender you want this name to be, so that we can make sure the grammar is correct.</p>
-            <div class="choice-row">
-              <label class="pill"><input type="radio" name="gender" value="male"> Male</label>
-              <label class="pill"><input type="radio" name="gender" value="female"> Female</label>
-              <label class="pill"><input type="radio" name="gender" value="neutral"> Neutral (nonbinary, genderless, suitable for both genders or suitable for either)</label>
-              <label class="pill"><input type="radio" name="gender" value="dont care"> Don't care</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Holding Name &amp; Documentation</legend>
+      <legend>Name Documentation</legend>
       <input type="checkbox" id="noHoldingName" name="I will NOT allow the creation of a holding name I understand that if my name submission is returned then my other" hidden>
 
       <div id="householdDocsWrap" hidden>
@@ -438,6 +374,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <input type="text" class="f-date" placeholder="e.g. 1250">
             <p class="date-warning" hidden></p>
           </div>
+          <div class="structured-citation">
           <div class="field">
             <label>Title of source, eg. "The History of Greek Names" or "A Collection Of Byzantine Names From Tax Records"</label>
             <input type="text" class="f-title">
@@ -450,6 +387,17 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <label>Source URL</label>
             <input type="text" class="f-url">
             <p class="source-fetch-hint" hidden></p>
+          </div>
+          </div>
+          <div class="field">
+            <label class="pill" style="width:fit-content;">
+              <input type="checkbox" class="use-free-citation">
+              Let me write my citation as free text
+            </label>
+          </div>
+          <div class="field free-citation-wrap" hidden>
+            <label>Citation</label>
+            <textarea class="f-freecite" rows="2" placeholder="e.g. Personal correspondence with Dr. A. Scholar, 12 March 2024"></textarea>
           </div>
         </fieldset>
 
@@ -497,6 +445,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <input type="text" class="f-date" placeholder="e.g. 1250">
             <p class="date-warning" hidden></p>
           </div>
+          <div class="structured-citation">
           <div class="field">
             <label>Title of source</label>
             <input type="text" class="f-title">
@@ -509,6 +458,17 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <label>Source for given name — URL</label>
             <input type="text" class="f-url">
             <p class="source-fetch-hint" hidden></p>
+          </div>
+          </div>
+          <div class="field">
+            <label class="pill" style="width:fit-content;">
+              <input type="checkbox" class="use-free-citation">
+              Let me write my citation as free text
+            </label>
+          </div>
+          <div class="field free-citation-wrap" hidden>
+            <label>Citation</label>
+            <textarea class="f-freecite" rows="2" placeholder="e.g. Personal correspondence with Dr. A. Scholar, 12 March 2024"></textarea>
           </div>
         </fieldset>
 
@@ -575,6 +535,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <input type="text" class="f-date" placeholder="e.g. 1250">
             <p class="date-warning" hidden></p>
           </div>
+          <div class="structured-citation">
           <div class="field">
             <label>Title of source</label>
             <input type="text" class="f-title">
@@ -587,6 +548,17 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <label>Source for byname — URL</label>
             <input type="text" class="f-url">
             <p class="source-fetch-hint" hidden></p>
+          </div>
+          </div>
+          <div class="field">
+            <label class="pill" style="width:fit-content;">
+              <input type="checkbox" class="use-free-citation">
+              Let me write my citation as free text
+            </label>
+          </div>
+          <div class="field free-citation-wrap" hidden>
+            <label>Citation</label>
+            <textarea class="f-freecite" rows="2" placeholder="e.g. Personal correspondence with Dr. A. Scholar, 12 March 2024"></textarea>
           </div>
         </fieldset>
 
@@ -672,6 +644,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <input type="text" class="f-date" placeholder="e.g. 1250">
             <p class="date-warning" hidden></p>
           </div>
+          <div class="structured-citation">
           <div class="field">
             <label>Title of source</label>
             <input type="text" class="f-title">
@@ -684,6 +657,17 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <label>Source for byname — URL</label>
             <input type="text" class="f-url">
             <p class="source-fetch-hint" hidden></p>
+          </div>
+          </div>
+          <div class="field">
+            <label class="pill" style="width:fit-content;">
+              <input type="checkbox" class="use-free-citation">
+              Let me write my citation as free text
+            </label>
+          </div>
+          <div class="field free-citation-wrap" hidden>
+            <label>Citation</label>
+            <textarea class="f-freecite" rows="2" placeholder="e.g. Personal correspondence with Dr. A. Scholar, 12 March 2024"></textarea>
           </div>
         </fieldset>
 
@@ -724,7 +708,85 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
     </fieldset>
 
 
-  </form>
+  <fieldset>
+      <legend>Name Processing Preferences</legend>
+      <p class="field-note">When you submit a name to the College, sometimes they can accept it as-is, sometimes they have to return it to you so you can try again, and sometimes there's a small tweak that can turn an unregisterable name into a registerable one. For example, if you made a small grammar mistake in forming a patronymic, the College can fix your grammar mistake and accept your name. What would you prefer?</p>
+      <div class="choice-row" id="prefChoices">
+        <label class="pill"><input type="radio" name="pref" value="notAccept"> Don't change my name at all. If there's a problem with me, please return it to me so that I can change it myself and resubmit.</label>
+        <label class="pill"><input type="radio" name="pref" value="necessary"> Only change my name if it's necessary, but any necessary changes are fine.</label>
+        <label class="pill"><input type="radio" name="pref" value="authentic"> I'd like help ensuring my name is historically authentic and I actively want the College to change my name to whatever the most authentic version would be.</label>
+        <label class="pill"><input type="radio" name="pref" value="acceptFollowing"> I'm okay with some changes, but not others.</label>
+      </div>
+      <div class="sub-choice" id="acceptFollowingWrap" hidden>
+        <div class="field">
+          <label for="acceptFollowingText">What changes are you OK with?</label>
+          <input type="text" id="acceptFollowingText" name="changes I will accept to my name">
+        </div>
+      </div>
+
+      <div class="sub-choice" id="holdingNamePreferenceWrap" hidden>
+        <div class="field">
+          <label class="pill" style="width:fit-content;">
+            <input type="checkbox" id="noHoldingNamePreference">
+            Tick this box to block the College from creating a holding name - a temporary name that your armory can be filed under, if your armory is accepted but your name isn't. Note that ticking this box means that, if your name is returned, your armory also can't be accepted. 
+          </label>
+        </div>
+      </div>
+
+      <div class="sub-choice" id="authenticQuestionsWrap" hidden>
+        <div class="field">
+          <label for="authenticCentury">What century should your name be documentable to?</label>
+          <input type="text" id="authenticCentury">
+        </div>
+        <div class="field">
+          <label for="authenticCulture">What culture or language do you want your name to be authentic for?</label>
+          <input type="text" id="authenticCulture">
+        </div>
+      </div>
+
+      <div id="preferenceDetailWrap" hidden>
+        <div class="field full inline-text" style="margin-top:16px;">
+          <label>If my name must be changed, I care most about</label>
+        </div>
+        <div class="choice-row" id="priorityChoices">
+          <label class="pill"><input type="checkbox" name="priority" value="none"> No preference</label>
+          <label class="pill"><input type="checkbox" name="priority" value="meaning"> Keeping the meaning the same</label>
+          <label class="pill"><input type="checkbox" name="priority" value="sound"> Keeping the sound the same</label>
+          <label class="pill"><input type="checkbox" name="priority" value="spelling"> Keeping the spelling the same</label>
+          <label class="pill"><input type="checkbox" name="priority" value="language"> Keeping the same language and/or culture</label>
+        </div>
+        <p id="priorityMultiWarning" hidden>It's generally best to select only one option here. You can select multiple options if you have complex preferences - eg. if you care about spelling for the given name but meaning for the byname.</p>
+        <div class="field full inline-text">
+          <label>Please specify the meaning/sound/spelling/language/culture that you want us to preserve.</label>
+          <p>For example:</p>
+          <ul class="example-list">
+            <li>"The name should sound like Katie but the spelling can change to Katy or Catie as necessary"</li>
+            <li>"The name should use a spelling with a J in it"</li>
+            <li>"the name should be Norse"</li>
+            <li>"the name should have a meaning relating to lions or cats"</li>
+            <li>"my dad's name was Paul so please keep the patronymic meaning daughter of Paul"</li>
+          </ul>
+          <p>That way, if the heralds have to change your name, we can keep what is important to you.</p>
+          <label for="prioritySpecify">What's important to preserve:</label>
+          <input type="text" id="prioritySpecify" name="Please specify meaning sound spelling or language andor culture desired" placeholder='Meaning/sound/spelling/language/culture that you want'>
+        </div>
+
+        <div class="grid" style="margin-top:16px;">
+          <div class="field">
+            <label>Desired gender of name</label>
+<p>Note: The heralds do not know, or care, what gender <b>you</b> are. We only need to know what gender you want this name to be, so that we can make sure the grammar is correct.</p>
+            <div class="choice-row">
+              <label class="pill"><input type="radio" name="gender" value="male"> Male</label>
+              <label class="pill"><input type="radio" name="gender" value="female"> Female</label>
+              <label class="pill"><input type="radio" name="gender" value="neutral"> Neutral (nonbinary, genderless, suitable for both genders or suitable for either)</label>
+              <label class="pill"><input type="radio" name="gender" value="dont care"> Don't care</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    </form>
 
   <div id="previewPane">
     <label>Live PDF preview</label>
@@ -806,7 +868,12 @@ function wireToggle(radioName, mapping) {
 
 function setRadioValue(name, value) {
   const input = document.querySelector(`input[name="${name}"][value="${CSS.escape(value)}"]`);
-  if (input) input.checked = true;
+  if (!input) return;
+  if (input.checked) return;
+  input.checked = true;
+  // Setting .checked directly doesn't fire 'change', so the visibility toggles that
+  // depend on this group would otherwise never run and stale sub-options would linger.
+  input.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 function clearRadioGroup(name) {
@@ -898,6 +965,30 @@ function restrictActionTypeOptions(restrict) {
   });
 }
 
+// Sub-options that only belong to particular action types. When the user backs out of a
+// path (eg. picks "Change", then switches to a brand new primary name), the choices they
+// made inside that path would otherwise linger invisibly and still affect the output.
+const ACTION_DEPENDENT_WRAPS = [
+  'resubWrap', 'changeWrap', 'actionOtherWrap', 'previousSubmissionWrap',
+  'appealDetailsWrap', 'changeDetailsWrap', 'holdingNameDetailsWrap', 'nameTypeOtherWrap'
+];
+
+function clearHiddenSubOptions() {
+  ACTION_DEPENDENT_WRAPS.forEach(id => {
+    const wrap = document.getElementById(id);
+    if (!wrap || !wrap.hidden) return;
+    wrap.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+    });
+  });
+  // These live outside the wraps above but are equally path-specific.
+  const returnedLink = document.getElementById('returnedLoarLinkWrap');
+  const changeLink = document.getElementById('changeLoarLinkWrap');
+  if (document.getElementById('previousSubmissionWrap')?.hidden && returnedLink) returnedLink.innerHTML = '';
+  if (document.getElementById('changeDetailsWrap')?.hidden && changeLink) changeLink.innerHTML = '';
+}
+
 function updateSubmissionPath() {
   const first = document.querySelector('input[name="firstSubmission"]:checked')?.value;
   const streamlined = document.querySelector('input[name="streamlinedAction"]:checked')?.value;
@@ -936,6 +1027,7 @@ function updateSubmissionPath() {
   }
 
   updateNameSubmittedVisibility();
+  clearHiddenSubOptions();
   updateDocumentationMode();
 }
 
@@ -959,6 +1051,16 @@ wireToggle('actionType', {
   appealDetailsWrap: 'Appeal',
   changeDetailsWrap: 'ChangeIfRegistered',
   holdingNameDetailsWrap: 'ChangeOfHoldingName'
+});
+
+// Registered after wireToggle so the wraps already reflect the new action type by the
+// time we decide which ones are stale.
+document.querySelectorAll('input[name="actionType"]').forEach(input => {
+  input.addEventListener('change', () => {
+    clearHiddenSubOptions();
+    regenerateDocNotes();
+    debouncedUpdatePreview();
+  });
 });
 
 document.querySelectorAll('input[name="nameType"]').forEach(r => r.addEventListener('change', updateNameSubmittedVisibility));
@@ -1196,7 +1298,8 @@ function readFields(blockEl) {
   const get = cls => blockEl.querySelector(`.${cls}`)?.value.trim() || '';
   return {
     name: get('f-name'), gender: get('f-gender'), culture: get('f-culture'),
-    date: get('f-date'), title: get('f-title'), author: get('f-author'), url: get('f-url')
+    date: get('f-date'), title: get('f-title'), author: get('f-author'), url: get('f-url'),
+    freeCite: blockEl.querySelector('.use-free-citation')?.checked ? get('f-freecite') : ''
   };
 }
 
@@ -1208,6 +1311,13 @@ function nameSentence(kind, data) {
   if (descriptor) s += ` ${descriptor}`;
   s += ` ${kind}`;
   if (data.date) s += ` dated to ${data.date}`;
+
+  // Some sources aren't a titled, authored web page — a free-text citation replaces
+  // the structured "in the source X by Y" clause entirely.
+  if (data.freeCite) {
+    return `${s}. Source: ${data.freeCite}`.replace(/\.?$/, '.');
+  }
+
   let titleAuthor = '';
   if (data.title) titleAuthor += `"${data.title}"`;
   if (data.author) titleAuthor += `${titleAuthor ? ' ' : ''}by ${data.author}`;
@@ -1764,6 +1874,47 @@ document.querySelectorAll('input[name="ptcOption"]').forEach(r => {
   r.addEventListener('change', () => { regenerateDocNotes(); debouncedUpdatePreview(); });
 });
 
+// "No preference" is mutually exclusive with the specific preferences, and picking
+// several specifics at once is legal but usually a mistake worth flagging.
+const priorityBoxes = Array.from(document.querySelectorAll('input[name="priority"]'));
+priorityBoxes.forEach(box => {
+  box.addEventListener('change', () => {
+    if (box.value === 'none' && box.checked) {
+      priorityBoxes.forEach(other => { if (other !== box) other.checked = false; });
+    } else if (box.value !== 'none' && box.checked) {
+      const noneBox = priorityBoxes.find(b => b.value === 'none');
+      if (noneBox) noneBox.checked = false;
+    }
+    updatePriorityWarning();
+  });
+});
+function updatePriorityWarning() {
+  const chosen = priorityBoxes.filter(b => b.checked && b.value !== 'none').length;
+  const warn = document.getElementById('priorityMultiWarning');
+  if (warn) warn.hidden = chosen < 2;
+}
+updatePriorityWarning();
+
+// Swap between structured citation fields and a single free-text citation.
+document.querySelectorAll('.use-free-citation').forEach(toggle => {
+  const block = toggle.closest('fieldset');
+  const structured = block.querySelector('.structured-citation');
+  const freeWrap = block.querySelector('.free-citation-wrap');
+  toggle.addEventListener('change', () => {
+    structured.hidden = toggle.checked;
+    freeWrap.hidden = !toggle.checked;
+    // Clear whichever side is now hidden, so a stale value can't reach the PDF.
+    if (toggle.checked) {
+      ['f-title','f-author','f-url'].forEach(c => { const el = block.querySelector('.' + c); if (el) el.value = ''; });
+    } else {
+      const fc = block.querySelector('.f-freecite');
+      if (fc) fc.value = '';
+    }
+    regenerateDocNotes();
+    debouncedUpdatePreview();
+  });
+});
+
 const statusEl = document.getElementById('status');
 
 document.getElementById('resetBtn').addEventListener('click', () => {
@@ -1806,6 +1957,10 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   const ptcNone = document.querySelector('input[name="ptcOption"][value="none"]');
   if (ptcNone) ptcNone.checked = true;
   document.querySelectorAll('.byname-explainer').forEach(d => d.open = false);
+  document.querySelectorAll('.use-free-citation').forEach(t => { t.checked = false; });
+  document.querySelectorAll('.structured-citation').forEach(el => { el.hidden = false; });
+  document.querySelectorAll('.free-citation-wrap').forEach(el => { el.hidden = true; });
+  updatePriorityWarning();
   updateBranchName();
   statusEl.textContent = '';
   statusEl.className = 'status';
@@ -1871,11 +2026,11 @@ function wrapForWidth(text, font, size, maxWidth) {
   return lines;
 }
 
-async function appendPermissionToConflictPage(pdfDoc) {
+async function appendPermissionToConflictPage(pdfDoc, unicodeFont) {
   const page = pdfDoc.addPage();
   const { width, height } = page.getSize();
-  const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
-  const bold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+  const font = unicodeFont || await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+  const bold = unicodeFont || await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
   const margin = 72;
   const maxWidth = width - margin * 2;
   const size = 12;
@@ -1906,7 +2061,52 @@ async function appendPermissionToConflictPage(pdfDoc) {
   });
 }
 
-async function buildFilledPdfBytes({ flatten }) {
+// pdf-lib's built-in Helvetica is WinAnsi-encoded, which covers Latin-1 (á, ó, ü) but
+// not Latin Extended (ř, ě, ł, ő). SCA names routinely use those, so when the standard
+// font fails we retry with a real Unicode font. It's fetched lazily and subset on embed,
+// so ordinary submissions never pay the download cost.
+const FONTKIT_URL = 'https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js';
+const UNICODE_FONT_URL = 'https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf';
+let unicodeFontBytesPromise = null;
+
+function loadScriptOnce(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('Could not load ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+async function getUnicodeFontBytes() {
+  if (!unicodeFontBytesPromise) {
+    unicodeFontBytesPromise = (async () => {
+      await loadScriptOnce(FONTKIT_URL);
+      const res = await fetch(UNICODE_FONT_URL);
+      if (!res.ok) throw new Error('Could not download the Unicode font');
+      return await res.arrayBuffer();
+    })();
+  }
+  return unicodeFontBytesPromise;
+}
+
+function isEncodingError(err) {
+  return /cannot encode/i.test(err && err.message || '');
+}
+
+async function buildFilledPdfBytes(opts) {
+  try {
+    return await buildFilledPdfBytesInner(opts);
+  } catch (err) {
+    if (!isEncodingError(err)) throw err;
+    const fontBytes = await getUnicodeFontBytes();
+    return await buildFilledPdfBytesInner({ ...opts, unicodeFontBytes: fontBytes });
+  }
+}
+
+async function buildFilledPdfBytesInner({ flatten, unicodeFontBytes }) {
   const bytes = base64ToArrayBuffer(PDF_BASE64);
   const pdfDoc = await PDFLib.PDFDocument.load(bytes);
   const form = pdfDoc.getForm();
@@ -1978,13 +2178,17 @@ async function buildFilledPdfBytes({ flatten }) {
     }
   }
 
+  // Only write these sub-options when the matching action type is actually selected —
+  // otherwise a leftover choice from an abandoned path could tick a box on the PDF.
   const resub = document.querySelector('input[name="resub"]:checked');
-  if (resub) setRadio('Resubmission', resub.value);
+  if (resub && selectedActionType === 'Resubmission') setRadio('Resubmission', resub.value);
   const change = document.querySelector('input[name="change"]:checked');
   // The PDF only offers release/retain. Granting permission to conflict still means the
   // name stays registered to the submitter, so it maps to "retain"; the permission itself
   // is conveyed by the letter appended as a second page.
-  if (change) setRadio('Change', change.value === 'RetainWithPermission' ? 'Retain' : change.value);
+  if (change && selectedActionType === 'ChangeIfRegistered') {
+    setRadio('Change', change.value === 'RetainWithPermission' ? 'Retain' : change.value);
+  }
 
   const pref = document.querySelector('input[name="pref"]:checked')?.value || 'necessary';
 
@@ -1998,9 +2202,11 @@ async function buildFilledPdfBytes({ flatten }) {
   }
 
   // Preferences 2/3/4 expose the priority and gender questions; preference 1 leaves them unset.
-  const priority = document.querySelector('input[name="priority"]:checked')?.value || 'none';
-  ['meaning','sound','spelling'].forEach(p => setCheck(p, pref !== 'notAccept' && priority === p));
-  setCheck('language andor culture', pref !== 'notAccept' && priority === 'language');
+  const priorities = Array.from(document.querySelectorAll('input[name="priority"]:checked'))
+    .map(el => el.value)
+    .filter(v => v !== 'none');
+  ['meaning','sound','spelling'].forEach(p => setCheck(p, pref !== 'notAccept' && priorities.includes(p)));
+  setCheck('language andor culture', pref !== 'notAccept' && priorities.includes('language'));
 
   const gender = document.querySelector('input[name="gender"]:checked');
   if (gender && pref !== 'notAccept') setRadio('Desired gender of name', gender.value);
@@ -2017,12 +2223,19 @@ async function buildFilledPdfBytes({ flatten }) {
   noHolding.checked = pref === 'notAccept' && document.getElementById('noHoldingNamePreference').checked;
   setCheck(noHolding.name, noHolding.checked);
 
+  let embeddedUnicodeFont = null;
+  if (unicodeFontBytes) {
+    pdfDoc.registerFontkit(window.fontkit);
+    embeddedUnicodeFont = await pdfDoc.embedFont(unicodeFontBytes, { subset: true });
+    form.updateFieldAppearances(embeddedUnicodeFont);
+  }
+
   if (flatten) form.flatten();
 
   // Permission to conflict: append a signed letter as a second page. This runs AFTER
   // flatten() so the signature field stays fillable while page 1 is locked down.
   if (wantsPermissionToConflict()) {
-    await appendPermissionToConflictPage(pdfDoc);
+    await appendPermissionToConflictPage(pdfDoc, embeddedUnicodeFont);
   }
   return await pdfDoc.save();
 }
