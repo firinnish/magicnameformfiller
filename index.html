@@ -257,6 +257,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
                This list could get out of date, so make sure you change this if/when branches merge/dissolve and new branches form -->
           <select id="branchSelect">
             <option value="">— select your group —</option>
+            <option value="__other__">Other / not listed — let me type it in</option>
             <option value="Canton of Aire Faucon">Canton of Aire Faucon</option>
             <option value="Canton of Attilium">Canton of Attilium</option>
             <option value="Barony of Black Diamond">Barony of Black Diamond</option>
@@ -300,8 +301,8 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
             <option value="Barony of Tir-y-Don">Barony of Tir-y-Don</option>
             <option value="Shire of Ursus Bay">Shire of Ursus Bay</option>
             <option value="Barony of Windmasters' Hill">Barony of Windmasters' Hill</option>
-            <option value="__other__">Other / not listed — let me type it in</option>
           </select>
+          <p id="branchGuessHint" hidden></p>
           <div id="branchOtherWrap" hidden>
             <input type="text" id="branchNameOther" placeholder="Barony/Shire/Canton of...">
           </div>
@@ -805,11 +806,17 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
       <label class="pill"><input type="radio" name="ptcOption" value="spelling"> Yes - I'd like anyone to be able to register a name with a clearly different spelling, even if it might sound similar in some accents or some pronunciations</label>
     </div>
     <p id="ptcAlreadyGranted" hidden>You've already chosen to grant permission to conflict in the "Change" section above, so a permission letter will be included.</p>
+
+    <p>Would you like a heraldic will? This indicates what you'd like to happen to your name(s) when you die.</p>
+    <div class="choice-row">
+      <label class="pill"><input type="checkbox" id="wantHeraldicWill"> Yes - I'd like to register a heraldic will</label>
+    </div>
+    <div id="heraldicWillWrap" hidden></div>
   </fieldset>
 
   <div class="action-bar">
     <div>
-      <p id="signatureWarning" hidden>After downloading this PDF, please sign it yourself — we can't do that for you. Just type your name or insert an image of your signature next to the field reading "Legal Signature:" on the second page.</p>
+      <p id="signatureWarning" hidden>After downloading this PDF, please sign it yourself — we can't do that for you. Just type your name or insert an image of your signature next to the field(s) reading "Legal Signature:" and/or "Signed:" on the added page(s).</p>
       <button type="button" id="generateBtn">Generate &amp; download filled PDF</button>
       <button type="button" id="resetBtn">Reset form</button>
       <div class="status" id="status"></div>
@@ -1767,7 +1774,8 @@ function updateSubmittedNameConfirm() {
 
 function regenerateDocNotes() {
   const sigWarn = document.getElementById('signatureWarning');
-  if (sigWarn) sigWarn.hidden = !wantsPermissionToConflict();
+  if (sigWarn) sigWarn.hidden = !(wantsPermissionToConflict() || wantsHeraldicWill());
+  refreshHeraldicWillIfNamesChanged();
   // The Change flow already grants permission, so don't ask twice.
   const alreadyGranted = isChangeWithPermission();
   const ptcNote = document.getElementById('ptcAlreadyGranted');
@@ -1866,9 +1874,66 @@ function updateBranchName() {
   if (!isOther) branchNameOther.value = '';
   branchNameHidden.value = isOther ? branchNameOther.value.trim() : selected;
 }
-branchSelect.addEventListener('change', updateBranchName);
+
+// Guess the local group from placenames in the address. Ordered most-specific first,
+// since eg. "Wilmington NC" must beat a bare state match. Abbreviations use word
+// boundaries so "GA" doesn't fire on "Gaborone" or "DC" on "Tadcott".
+const BRANCH_GUESSES = [
+  [/\bWilmington\b[\s,]*(NC|North\s+Carolina)\b/i, 'Shire of Seareach'],
+  [/\bNewport\s+News\b/i, 'Barony of Tir-y-Don'],
+  [/\b(Arlington|Alexandria)\b/i, 'Barony of Ponte Alto'],
+  [/\bBaltimore\b/i, 'Barony of Bright Hills'],
+  [/\bRichmond\b/i, 'Barony of Caer Mear'],
+  [/\bDC\b/i, 'Barony of Storvik'],
+  [/\b(Georgia|GA)\b/i, 'Shire of Border Vale Keep']
+];
+
+let branchChosenManually = false;
+
+function guessBranchFromAddress() {
+  const address = [
+    document.getElementById('address1')?.value || '',
+    document.getElementById('address2')?.value || ''
+  ].join(' ');
+  if (!address.trim()) return null;
+  for (const [pattern, branch] of BRANCH_GUESSES) {
+    if (pattern.test(address)) return branch;
+  }
+  return null;
+}
+
+function applyBranchGuess() {
+  // A guess never overrides a choice the person made themselves.
+  if (branchChosenManually) return;
+  const guess = guessBranchFromAddress();
+  const hint = document.getElementById('branchGuessHint');
+  if (!guess) {
+    if (hint) hint.hidden = true;
+    return;
+  }
+  if (branchSelect.value !== guess) {
+    branchSelect.value = guess;
+    updateBranchName();
+  }
+  if (hint) {
+    hint.hidden = false;
+    hint.textContent = `We've guessed ${guess} from your address — change it above if that's not right.`;
+  }
+}
+
+branchSelect.addEventListener('change', () => {
+  branchChosenManually = true;
+  const hint = document.getElementById('branchGuessHint');
+  if (hint) hint.hidden = true;
+  updateBranchName();
+});
 branchNameOther.addEventListener('input', updateBranchName);
+['address1', 'address2'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', applyBranchGuess);
+});
 updateBranchName();
+applyBranchGuess();
 
 document.querySelectorAll('input[name="ptcOption"]').forEach(r => {
   r.addEventListener('change', () => { regenerateDocNotes(); debouncedUpdatePreview(); });
@@ -1960,12 +2025,333 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   document.querySelectorAll('.use-free-citation').forEach(t => { t.checked = false; });
   document.querySelectorAll('.structured-citation').forEach(el => { el.hidden = false; });
   document.querySelectorAll('.free-citation-wrap').forEach(el => { el.hidden = true; });
+  if (wantHeraldicWill) wantHeraldicWill.checked = false;
+  if (heraldicWillWrap) { heraldicWillWrap.hidden = true; heraldicWillWrap.innerHTML = ''; }
+  lastWillNameSignature = null;
   updatePriorityWarning();
   updateBranchName();
+  branchChosenManually = false;
+  const bgh = document.getElementById('branchGuessHint');
+  if (bgh) bgh.hidden = true;
   statusEl.textContent = '';
   statusEl.className = 'status';
   debouncedUpdatePreview();
 });
+
+// --- Heraldic will -------------------------------------------------------------
+// Which registered names are in play depends on what they're submitting: a plain new
+// primary name is one name, but registering an alternate (or changing a name while
+// retaining the old one) means there are two names to make determinations about.
+const SIMILARITY_LABELS = {
+  notIdentical: 'not identical to',
+  syllable: 'at least a syllable different from',
+  spelling: 'visually distinct from'
+};
+const SIMILARITY_OPTIONS = [
+  ['notIdentical', 'Any name that isn\'t identical'],
+  ['syllable', 'Any name at least one syllable different from mine'],
+  ['spelling', 'Any name that has a different spelling, even if it might sound the same in some accents or pronunciations']
+];
+
+function getRegisteredNames() {
+  const names = [];
+  const societyName = document.getElementById('societyName').value.trim();
+  const submitted = document.getElementById('nameSubmitted').value.trim();
+  const oldName = document.getElementById('changePreviousName').value.trim();
+  const nameType = getEffectiveNameType();
+  const action = getEffectiveActionType();
+  const changeChoice = document.querySelector('input[name="change"]:checked')?.value;
+
+  if (action === 'ChangeIfRegistered') {
+    // The old name only survives if they're retaining it rather than releasing it.
+    if (oldName && changeChoice !== 'Release') names.push({ key: 'old', label: oldName });
+    if (societyName) names.push({ key: 'new', label: societyName });
+  } else if (['Alternate', 'Household', 'Other'].includes(nameType)) {
+    if (societyName) names.push({ key: 'primary', label: societyName });
+    if (submitted) names.push({ key: 'new', label: submitted });
+  } else if (societyName) {
+    names.push({ key: 'new', label: societyName });
+  }
+  // De-duplicate in case two fields hold the same string.
+  const seen = new Set();
+  return names.filter(n => !seen.has(n.label) && seen.add(n.label));
+}
+
+// A name that already has permission to conflict granted above doesn't need the
+// blanket-permission option repeated in the will.
+function namesAlreadyGrantedPermission() {
+  const granted = new Set();
+  if (isChangeWithPermission()) {
+    const oldName = document.getElementById('changePreviousName').value.trim();
+    if (oldName) granted.add(oldName);
+  }
+  const opt = document.querySelector('input[name="ptcOption"]:checked')?.value;
+  if (opt && opt !== 'none') {
+    const societyName = document.getElementById('societyName').value.trim();
+    if (societyName) granted.add(societyName);
+  }
+  return granted;
+}
+
+var heraldicWillWrap = document.getElementById('heraldicWillWrap');
+var wantHeraldicWill = document.getElementById('wantHeraldicWill');
+
+function renderHeraldicWill() {
+  if (!heraldicWillWrap || !wantHeraldicWill) return;
+  heraldicWillWrap.hidden = !wantHeraldicWill.checked;
+  if (!wantHeraldicWill.checked) { heraldicWillWrap.innerHTML = ''; return; }
+
+  const names = getRegisteredNames();
+  const granted = namesAlreadyGrantedPermission();
+  const multiple = names.length > 1;
+
+  if (!names.length) {
+    heraldicWillWrap.innerHTML = '<p>Fill in the name you\'re registering above, and this section will ask what should happen to it.</p>';
+    return;
+  }
+
+  // Preserve existing answers across re-renders (the form re-renders as names change).
+  const prior = {};
+  heraldicWillWrap.querySelectorAll('[data-will-key]').forEach(el => {
+    const k = el.getAttribute('data-will-key');
+    prior[k] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+
+  heraldicWillWrap.innerHTML = names.map((n, i) => {
+    const showBlanket = !granted.has(n.label);
+    return `
+      <fieldset data-will-index="${i}">
+        <legend>${escapeHtml(n.label)}</legend>
+        <label>What do you want to happen to the name ${escapeHtml(n.label)} if/when you die?</label>
+        <div class="choice-row">
+          <label class="pill"><input type="checkbox" data-will-key="transfer-${i}" class="will-transfer will-action-${i}"> I want to transfer the name to an heir</label>
+          <label class="pill"><input type="checkbox" data-will-key="release-${i}" class="will-release will-action-${i}"> I want to release the name, so it will no longer be registered to me</label>
+          ${showBlanket ? `<label class="pill"><input type="checkbox" data-will-key="blanket-${i}" class="will-blanket will-action-${i}"> I want to grant blanket permission to conflict, so that the name is still recorded as registered to me but I'm not preventing future submitters from registering similar names</label>` : ''}
+          ${multiple ? `<label class="pill"><input type="checkbox" data-will-key="skip-${i}" class="will-skip will-action-${i}"> I don't want to register a heraldic will for this name at this time</label>` : ''}
+        </div>
+        <div class="sub-choice will-heir-wrap" hidden>
+          ${i > 0 ? `<label class="pill" style="width:fit-content;"><input type="checkbox" data-will-key="diffheir-${i}" class="will-diff-heir"> Transfer to a different heir</label>` : ''}
+          <div class="will-heir-fields">
+            <div class="field"><label>SCA name of heir</label><input type="text" data-will-key="heirsca-${i}" class="will-heir-sca"></div>
+            <div class="field"><label>Legal name of heir</label><input type="text" data-will-key="heirlegal-${i}" class="will-heir-legal"></div>
+          </div>
+        </div>
+        <div class="sub-choice will-blanket-wrap" hidden>
+          <div class="field">
+            <label>How similar a name should be allowed?</label>
+            <select data-will-key="sim-${i}" class="will-similarity">
+              ${SIMILARITY_OPTIONS.map(([v, t]) => `<option value="${v}">${escapeHtml(t)}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </fieldset>`;
+  }).join('');
+
+  // Restore prior answers.
+  heraldicWillWrap.querySelectorAll('[data-will-key]').forEach(el => {
+    const k = el.getAttribute('data-will-key');
+    if (!(k in prior)) return;
+    if (el.type === 'checkbox') el.checked = prior[k];
+    else el.value = prior[k];
+  });
+
+  wireHeraldicWillBlocks();
+  updateHeraldicWillVisibility();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function wireHeraldicWillBlocks() {
+  heraldicWillWrap.querySelectorAll('fieldset[data-will-index]').forEach(block => {
+    block.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('change', () => {
+        enforceWillExclusivity(block, el);
+        updateHeraldicWillVisibility();
+        regenerateDocNotes();
+        debouncedUpdatePreview();
+      });
+      if (el.tagName === 'INPUT' && el.type === 'text') {
+        el.addEventListener('input', () => { regenerateDocNotes(); debouncedUpdatePreview(); });
+      }
+    });
+  });
+}
+
+// "Release" and "skip" are each exclusive — you can't release a name and also transfer it.
+function enforceWillExclusivity(block, changed) {
+  const exclusive = ['will-release', 'will-skip'];
+  const isExclusive = exclusive.some(c => changed.classList.contains(c));
+  if (isExclusive && changed.checked) {
+    block.querySelectorAll('.will-transfer, .will-release, .will-blanket, .will-skip').forEach(el => {
+      if (el !== changed) el.checked = false;
+    });
+  } else if (changed.checked && (changed.classList.contains('will-transfer') || changed.classList.contains('will-blanket'))) {
+    block.querySelectorAll('.will-release, .will-skip').forEach(el => { el.checked = false; });
+  }
+}
+
+function updateHeraldicWillVisibility() {
+  heraldicWillWrap.querySelectorAll('fieldset[data-will-index]').forEach((block, i) => {
+    const transfer = block.querySelector('.will-transfer')?.checked;
+    const blanket = block.querySelector('.will-blanket')?.checked;
+    const released = block.querySelector('.will-release')?.checked || block.querySelector('.will-skip')?.checked;
+
+    block.querySelector('.will-heir-wrap').hidden = !transfer;
+    block.querySelector('.will-blanket-wrap').hidden = !blanket;
+
+    // Grey out the other options once release/skip is chosen.
+    block.querySelectorAll('.will-transfer, .will-blanket').forEach(el => {
+      el.disabled = !!released;
+      el.closest('label').style.opacity = released ? '0.5' : '';
+    });
+
+    // Later names default to the first heir unless they opt into a different one.
+    const diffHeir = block.querySelector('.will-diff-heir');
+    const heirFields = block.querySelector('.will-heir-fields');
+    if (i > 0 && diffHeir) {
+      heirFields.hidden = !diffHeir.checked;
+      if (!diffHeir.checked) {
+        const first = heraldicWillWrap.querySelector('fieldset[data-will-index="0"]');
+        if (first) {
+          block.querySelector('.will-heir-sca').value = first.querySelector('.will-heir-sca')?.value || '';
+          block.querySelector('.will-heir-legal').value = first.querySelector('.will-heir-legal')?.value || '';
+        }
+      }
+    }
+  });
+}
+
+var lastWillNameSignature = null;
+function refreshHeraldicWillIfNamesChanged() {
+  if (!wantHeraldicWill || !wantHeraldicWill.checked) { lastWillNameSignature = null; return; }
+  // Rebuilding on every keystroke would blow away focus in the heir fields, so only
+  // rebuild when the actual set of names (or their permission status) has changed.
+  const sig = JSON.stringify([
+    getRegisteredNames().map(n => n.label),
+    Array.from(namesAlreadyGrantedPermission()).sort()
+  ]);
+  if (sig !== lastWillNameSignature) {
+    lastWillNameSignature = sig;
+    renderHeraldicWill();
+  }
+}
+
+wantHeraldicWill.addEventListener('change', () => {
+  lastWillNameSignature = null;
+  refreshHeraldicWillIfNamesChanged();
+  heraldicWillWrap.hidden = !wantHeraldicWill.checked;
+  if (!wantHeraldicWill.checked) heraldicWillWrap.innerHTML = '';
+  regenerateDocNotes();
+  debouncedUpdatePreview();
+});
+
+function wantsHeraldicWill() {
+  return !!(wantHeraldicWill && wantHeraldicWill.checked) && heraldicWillBullets().length > 0;
+}
+
+// Collects each name's determinations, grouped so that (say) two names going to the
+// same heir become one bullet rather than two.
+function heraldicWillBullets() {
+  if (!wantHeraldicWill || !wantHeraldicWill.checked || !heraldicWillWrap) return [];
+  const names = getRegisteredNames();
+  const transfersByHeir = new Map();
+  const released = [];
+  const blanketBySimilarity = new Map();
+
+  heraldicWillWrap.querySelectorAll('fieldset[data-will-index]').forEach(block => {
+    const i = parseInt(block.getAttribute('data-will-index'), 10);
+    const name = names[i];
+    if (!name) return;
+    if (block.querySelector('.will-skip')?.checked) return;
+
+    if (block.querySelector('.will-transfer')?.checked) {
+      const sca = block.querySelector('.will-heir-sca')?.value.trim() || '';
+      const legal = block.querySelector('.will-heir-legal')?.value.trim() || '';
+      if (sca || legal) {
+        const key = `${legal}|${sca}`;
+        if (!transfersByHeir.has(key)) transfersByHeir.set(key, { legal, sca, names: [] });
+        transfersByHeir.get(key).names.push(name.label);
+      }
+    }
+    if (block.querySelector('.will-release')?.checked) released.push(name.label);
+    if (block.querySelector('.will-blanket')?.checked) {
+      const sim = block.querySelector('.will-similarity')?.value || 'notIdentical';
+      if (!blanketBySimilarity.has(sim)) blanketBySimilarity.set(sim, []);
+      blanketBySimilarity.get(sim).push(name.label);
+    }
+  });
+
+  const bullets = [];
+  transfersByHeir.forEach(({ legal, sca, names: ns }) => {
+    const heir = sca ? `${legal || '________________'}, known in the SCA as ${sca}` : (legal || '________________');
+    bullets.push(`transfer to ${heir}, the following name(s) registered to me in the SCA: ${ns.join(', ')}`);
+  });
+  if (released.length) {
+    bullets.push(`release the following name(s) registered to me in the SCA: ${released.join(', ')}`);
+  }
+  blanketBySimilarity.forEach((ns, sim) => {
+    bullets.push(`grant blanket permission to conflict to anyone submitting a name ${SIMILARITY_LABELS[sim]} my name(s) registered to me in the SCA: ${ns.join(', ')}`);
+  });
+  return bullets;
+}
+
+function heraldicWillIntro() {
+  const blank = '________________';
+  const legalName = document.getElementById('modernName').value.trim() || blank;
+  const scaName = document.getElementById('societyName').value.trim() || blank;
+  const oldName = document.getElementById('changePreviousName').value.trim();
+  const formerly = (getEffectiveActionType() === 'ChangeIfRegistered' && oldName)
+    ? `, formerly known as ${oldName}` : '';
+  return `I, ${legalName}, known in the Society for Creative Anachronism, Incorporated (SCA) as ${scaName}${formerly}, wish to make the following determinations to my name(s) and/or armory upon my death as below:`;
+}
+
+async function appendHeraldicWillPage(pdfDoc, unicodeFont) {
+  const bullets = heraldicWillBullets();
+  if (!bullets.length) return;
+
+  const page = pdfDoc.addPage();
+  const { width, height } = page.getSize();
+  const font = unicodeFont || await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+  const bold = unicodeFont || await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+  const margin = 72;
+  const maxWidth = width - margin * 2;
+  const size = 12;
+  let y = height - margin;
+
+  page.drawText('Heraldic Will', { x: margin, y, size: 16, font: bold });
+  y -= 36;
+
+  for (const line of wrapForWidth(heraldicWillIntro(), font, size, maxWidth)) {
+    page.drawText(line, { x: margin, y, size, font });
+    y -= size * 1.6;
+  }
+  y -= 12;
+
+  bullets.forEach((text, idx) => {
+    // Subsequent determinations read "and ..." so the list is unambiguous.
+    const body = (idx === 0 ? '' : 'and ') + text;
+    const indent = 18;
+    const lines = wrapForWidth(body, font, size, maxWidth - indent);
+    lines.forEach((line, li) => {
+      if (li === 0) page.drawText('*', { x: margin, y, size, font });
+      page.drawText(line, { x: margin + indent, y, size, font });
+      y -= size * 1.6;
+    });
+    y -= 6;
+  });
+
+  y -= 24;
+  page.drawText('Signed:', { x: margin, y, size, font });
+  const sigField = pdfDoc.getForm().createTextField('Heraldic Will Signature');
+  sigField.addToPage(page, {
+    x: margin + font.widthOfTextAtSize('Signed:', size) + 10,
+    y: y - 6,
+    width: maxWidth - font.widthOfTextAtSize('Signed:', size) - 10,
+    height: 26
+  });
+}
 
 const PERMISSION_CLAUSES = {
   notIdentical: 'I grant permission to any future submitter to register a name that is not identical to it.',
@@ -2236,6 +2622,9 @@ async function buildFilledPdfBytesInner({ flatten, unicodeFontBytes }) {
   // flatten() so the signature field stays fillable while page 1 is locked down.
   if (wantsPermissionToConflict()) {
     await appendPermissionToConflictPage(pdfDoc, embeddedUnicodeFont);
+  }
+  if (wantsHeraldicWill()) {
+    await appendHeraldicWillPage(pdfDoc, embeddedUnicodeFont);
   }
   return await pdfDoc.save();
 }
