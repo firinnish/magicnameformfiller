@@ -37,7 +37,7 @@ input.field-error { border-color: #a00; background: #fee; }
 </style>
 </head>
 <body>
-<h1>Forannán's UNOFFICIAL Atlantia Name Form Filler</h1>
+<h1>UNOFFICIAL Atlantian Name Form Filler</h1>
 
 <details class="faq-box">
   <summary>FAQ</summary>
@@ -74,7 +74,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
           <input type="text" id="notSureGivenName" placeholder="e.g. John, Mary, Ragnarr, Lisbet">
         </div>
         <div class="field">
-          <label for="notSureByname">Byname or surname(s) that you think might be registered</label>
+          <label for="notSureByname">Byname(s) or surname(s) that you think might be registered</label>
           <input type="text" id="notSureByname" placeholder="e.g. Smith, of London, the Weaver, Axebreaker">
         </div>
         <div class="field full" id="notSureSearchWrap"></div>
@@ -111,6 +111,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
           <div class="choice-row">
             <label class="pill"><input type="radio" name="change" value="Release">I don't want my former name anymore - someone else can have it.</label>
             <label class="pill"><input type="radio" name="change" value="Retain">I want to keep my old name on record as an alternate/backup name for me.</label>
+            <label class="pill"><input type="radio" name="change" value="RetainWithPermission">I'd like to keep the name on record, registered to me, but grant permission to conflict so that other people are allowed to register very similar names.</label>
           </div>
         </div>
         <label class="pill"><input type="radio" name="actionType" value="ChangeOfHoldingName">Change of Holding Name (I was assigned a holding name and want to change it)</label>
@@ -247,8 +248,61 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
           <input type="email" id="email" name="Email Address">
         </div>
         <div class="field">
-          <label for="branchName">Your local group</label>
-          <input type="text" id="branchName" name="Branch Name" placeholder="Barony/Shire/Canton of...">
+          <label for="branchSelect">Your local group</label>
+          <!-- Branch list transcribed from https://atlantia.sca.org/newcomers/local-groups/
+               This list could get out of date, so make sure you change this if/when branches merge/dissolve and new branches form -->
+          <select id="branchSelect">
+            <option value="">— select your group —</option>
+            <option value="Canton of Aire Faucon">Canton of Aire Faucon</option>
+            <option value="Canton of Attilium">Canton of Attilium</option>
+            <option value="Barony of Black Diamond">Barony of Black Diamond</option>
+            <option value="Shire of Border Vale Keep">Shire of Border Vale Keep</option>
+            <option value="Barony of Bright Hills">Barony of Bright Hills</option>
+            <option value="Canton of Brockore Abbey">Canton of Brockore Abbey</option>
+            <option value="Canton of Buckston-on-Eno">Canton of Buckston-on-Eno</option>
+            <option value="Barony of Caer Mear">Barony of Caer Mear</option>
+            <option value="Canton of Charlesbury Crossing">Canton of Charlesbury Crossing</option>
+            <option value="Canton of Cydllan Downs">Canton of Cydllan Downs</option>
+            <option value="Barony of Dun Carraig">Barony of Dun Carraig</option>
+            <option value="Canton of Elvegast">Canton of Elvegast</option>
+            <option value="Canton of Falconcree">Canton of Falconcree</option>
+            <option value="Barony of Hawkwood">Barony of Hawkwood</option>
+            <option value="Barony of Hidden Mountain">Barony of Hidden Mountain</option>
+            <option value="Barony of Highland Foorde">Barony of Highland Foorde</option>
+            <option value="Shire of Isenfir">Shire of Isenfir</option>
+            <option value="Canton of Kapellenberg">Canton of Kapellenberg</option>
+            <option value="Barony of Lochmere">Barony of Lochmere</option>
+            <option value="Barony of Marinus">Barony of Marinus</option>
+            <option value="Canton of Middlegate">Canton of Middlegate</option>
+            <option value="Canton of Misty Marsh by the Sea">Canton of Misty Marsh by the Sea</option>
+            <option value="Canton of Moorhaven">Canton of Moorhaven</option>
+            <option value="Canton of Nimenefeld">Canton of Nimenefeld</option>
+            <option value="Barony of Nottinghill Coill">Barony of Nottinghill Coill</option>
+            <option value="Barony of Ponte Alto">Barony of Ponte Alto</option>
+            <option value="Barony of Raven's Cove">Barony of Raven's Cove</option>
+            <option value="Canton of Ritterwald">Canton of Ritterwald</option>
+            <option value="Shire of Roxbury Mill">Shire of Roxbury Mill</option>
+            <option value="Barony of Sacred Stone">Barony of Sacred Stone</option>
+            <option value="Canton of Saint Georges">Canton of Saint Georges</option>
+            <option value="Canton of Salesberie Glen">Canton of Salesberie Glen</option>
+            <option value="Shire of Seareach">Shire of Seareach</option>
+            <option value="Canton of Seven Hills">Canton of Seven Hills</option>
+            <option value="Shire of Spiaggia Levantina">Shire of Spiaggia Levantina</option>
+            <option value="Barony of Stierbach">Barony of Stierbach</option>
+            <option value="Canton of Stormwall">Canton of Stormwall</option>
+            <option value="Barony of Storvik">Barony of Storvik</option>
+            <option value="Canton of Sudentorre">Canton of Sudentorre</option>
+            <option value="Canton of Tear-Sea's Shore">Canton of Tear-Sea's Shore</option>
+            <option value="Barony of Tir-y-Don">Barony of Tir-y-Don</option>
+            <option value="Shire of Ursus Bay">Shire of Ursus Bay</option>
+            <option value="Barony of Windmasters' Hill">Barony of Windmasters' Hill</option>
+            <option value="__other__">Other / not listed — let me type it in</option>
+          </select>
+          <div id="branchOtherWrap" hidden>
+            <input type="text" id="branchNameOther" placeholder="Barony/Shire/Canton of...">
+          </div>
+          <p>If you're not sure which local group you live in, check the <a href="https://atlantia.sca.org/newcomers/local-groups/" target="_blank" rel="noopener">list of local groups</a> or use the <a href="https://branch.atlantia.sca.org/index.php" target="_blank" rel="noopener">zip code lookup tool</a>.</p>
+          <input type="hidden" id="branchName" name="Branch Name">
         </div>
         <div class="field">
           <label for="dateSubmitted">Date Submitted</label>
@@ -320,7 +374,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
         <div class="field full inline-text">
 <p> Please specify the meaning/sound/spelling/language culture that you want us to preserve. For example: <ul><li>"The name should sound like Katie but the spelling can change to Katy or Catie as necessary"</li><li>"The name should use a spelling with a J in it"</li><li>"the name should be Norse"</li><li>"the name should have a meaning relating to lions or cats"</li><li>"my dad's name was Paul so please keep the patronymic meaning daughter of Paul"</li><br>That way, if the heralds have to change your name, we can keep what is important to you.<br></p>
           <label for="prioritySpecify">What's important to preserve:</label>
-          <input type="text" id="prioritySpecify" name="Please specify meaning sound spelling or language and/or culture desired" placeholder='Meaning/sound/spelling/language/culture that you want'>
+          <input type="text" id="prioritySpecify" name="Please specify meaning sound spelling or language andor culture desired" placeholder='Meaning/sound/spelling/language/culture that you want'>
         </div>
 
         <div class="grid" style="margin-top:16px;">
@@ -657,6 +711,7 @@ This webpage generates a correctly-filled-out copy of Atlantia's official indivi
 
   <div class="action-bar">
     <div>
+      <p id="signatureWarning" hidden>After downloading this PDF, please sign it yourself — we can't do that for you. Just type your name or insert an image of your signature next to the field reading "Legal Signature:" on the second page.</p>
       <button type="button" id="generateBtn">Generate &amp; download filled PDF</button>
       <button type="button" id="resetBtn">Reset form</button>
       <div class="status" id="status"></div>
@@ -1548,6 +1603,8 @@ function updateSubmittedNameConfirm() {
 }
 
 function regenerateDocNotes() {
+  const sigWarn = document.getElementById('signatureWarning');
+  if (sigWarn) sigWarn.hidden = !wantsPermissionToConflict();
   updateDynamicLabels();
   updateDateValidation();
   updateSocietyNameMode();
@@ -1624,6 +1681,24 @@ function fillTodaysDate() {
 }
 fillTodaysDate();
 
+// The local-group dropdown and its "Other" free-text box both feed the hidden
+// #branchName field, which is what the PDF fill actually reads.
+const branchSelect = document.getElementById('branchSelect');
+const branchOtherWrap = document.getElementById('branchOtherWrap');
+const branchNameOther = document.getElementById('branchNameOther');
+const branchNameHidden = document.getElementById('branchName');
+
+function updateBranchName() {
+  const selected = branchSelect.value;
+  const isOther = selected === '__other__';
+  branchOtherWrap.hidden = !isOther;
+  if (!isOther) branchNameOther.value = '';
+  branchNameHidden.value = isOther ? branchNameOther.value.trim() : selected;
+}
+branchSelect.addEventListener('change', updateBranchName);
+branchNameOther.addEventListener('input', updateBranchName);
+updateBranchName();
+
 const statusEl = document.getElementById('status');
 
 document.getElementById('resetBtn').addEventListener('click', () => {
@@ -1663,10 +1738,75 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   streamlinedSubmission = null;
   updateDocumentationMode();
   fillTodaysDate();
+  updateBranchName();
   statusEl.textContent = '';
   statusEl.className = 'status';
   debouncedUpdatePreview();
 });
+
+function wantsPermissionToConflict() {
+  return document.querySelector('input[name="change"]:checked')?.value === 'RetainWithPermission'
+    && getEffectiveActionType() === 'ChangeIfRegistered';
+}
+
+function permissionLetterText() {
+  const legalName = document.getElementById('modernName').value.trim() || '________________';
+  const scaName = document.getElementById('societyName').value.trim() || '________________';
+  const oldName = document.getElementById('changePreviousName').value.trim() || '________________';
+  return `I, ${legalName}, known in the Society as ${scaName}, waive the full protection of my registered name, ${oldName}. I grant permission to any future submitter to register a name that is not identical to it. I understand this permission can be withdrawn by written notice to the Laurel Sovereign of Arms, but that conflicting items registered while it is in force will remain registered.`;
+}
+
+// Greedy word wrap, since pdf-lib draws a single unwrapped line at a time.
+function wrapForWidth(text, font, size, maxWidth) {
+  const lines = [];
+  let line = '';
+  for (const word of text.split(/\s+/)) {
+    const candidate = line ? `${line} ${word}` : word;
+    if (font.widthOfTextAtSize(candidate, size) > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+async function appendPermissionToConflictPage(pdfDoc) {
+  const page = pdfDoc.addPage();
+  const { width, height } = page.getSize();
+  const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+  const bold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+  const margin = 72;
+  const maxWidth = width - margin * 2;
+  const size = 12;
+  let y = height - margin;
+
+  page.drawText('Permission to Conflict', { x: margin, y, size: 16, font: bold });
+  y -= 36;
+
+  for (const line of wrapForWidth(permissionLetterText(), font, size, maxWidth)) {
+    page.drawText(line, { x: margin, y, size, font });
+    y -= size * 1.6;
+  }
+
+  y -= 24;
+  const today = new Date();
+  const dateStr = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}/${today.getFullYear()}`;
+  page.drawText(`Date: ${dateStr}`, { x: margin, y, size, font });
+
+  y -= 44;
+  page.drawText('Legal Signature:', { x: margin, y, size, font });
+
+  const sigField = pdfDoc.getForm().createTextField('Legal Signature');
+  sigField.addToPage(page, {
+    x: margin + font.widthOfTextAtSize('Legal Signature:', size) + 10,
+    y: y - 6,
+    width: maxWidth - font.widthOfTextAtSize('Legal Signature:', size) - 10,
+    height: 26
+  });
+}
 
 async function buildFilledPdfBytes({ flatten }) {
   const bytes = base64ToArrayBuffer(PDF_BASE64);
@@ -1699,6 +1839,7 @@ async function buildFilledPdfBytes({ flatten }) {
   };
 
   regenerateDocNotes();
+  updateBranchName();
 
   const textFieldIds = [
     'societyName','nameSubmitted','modernName','address1','address2','phone','email',
@@ -1742,7 +1883,10 @@ async function buildFilledPdfBytes({ flatten }) {
   const resub = document.querySelector('input[name="resub"]:checked');
   if (resub) setRadio('Resubmission', resub.value);
   const change = document.querySelector('input[name="change"]:checked');
-  if (change) setRadio('Change', change.value);
+  // The PDF only offers release/retain. Granting permission to conflict still means the
+  // name stays registered to the submitter, so it maps to "retain"; the permission itself
+  // is conveyed by the letter appended as a second page.
+  if (change) setRadio('Change', change.value === 'RetainWithPermission' ? 'Retain' : change.value);
 
   const pref = document.querySelector('input[name="pref"]:checked')?.value || 'necessary';
 
@@ -1776,6 +1920,12 @@ async function buildFilledPdfBytes({ flatten }) {
   setCheck(noHolding.name, noHolding.checked);
 
   if (flatten) form.flatten();
+
+  // Permission to conflict: append a signed letter as a second page. This runs AFTER
+  // flatten() so the signature field stays fillable while page 1 is locked down.
+  if (wantsPermissionToConflict()) {
+    await appendPermissionToConflictPage(pdfDoc);
+  }
   return await pdfDoc.save();
 }
 
